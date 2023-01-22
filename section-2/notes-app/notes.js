@@ -1,5 +1,5 @@
-const getNots = function(){
-    return "My Notes!"
+function getNots() {
+    return "My Notes!";
 }
 
 module.exports = getNots;
