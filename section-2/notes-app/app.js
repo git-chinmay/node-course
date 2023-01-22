@@ -36,5 +36,9 @@ console.log(validator.isEmail("@gmaill.com"));
 //// PRINTING IN COLOR ////
 const chalk = require("chalk");
 console.log(chalk.green("Success!"));
+//To make it bold : Black background green text
+console.log(chalk.green.bold("Bold Success!"));
+//Inversing it : Green backgound black text
+console.log(chalk.green.inverse.bold("Bold Success Inversed!"));
 
 
