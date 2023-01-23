@@ -10,8 +10,22 @@ console.log(process.argv);
 yargs.command({
     command: "add",
     describe: "Adding a new item to note.",
-    handler: function(){
-        console.log("New note added.")
+    builder: {
+        title:{
+            describe: "Title of the note.",
+            demandOption: true,
+            type: 'string'
+        },
+        body:{
+            describe: "Body of the added element.",
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: function(argv){
+        //console.log("New note added.", argv)
+        console.log(`Title: ${argv.title}`);
+        console.log(`Body: ${argv.body}`);
     }
 })
 
@@ -43,7 +57,8 @@ yargs.command({
 })
 
 
-console.log(yargs.argv);
+//console.log(yargs.argv); below parse command will take care
+yargs.parse();
 
 
 
