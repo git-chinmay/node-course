@@ -1,9 +1,9 @@
-const msg = require("./notes");
+const note = require("./notes");
 const chalk = require("chalk");
 const yargs = require("yargs");
 
-console.log(msg());
-console.log(process.argv);
+// console.log(note.getNotes());
+// console.log(process.argv);
 
 //Run: node app.js --help to see the below command 
 //Adding a new note
@@ -23,9 +23,7 @@ yargs.command({
         }
     },
     handler: function(argv){
-        //console.log("New note added.", argv)
-        console.log(`Title: ${argv.title}`);
-        console.log(`Body: ${argv.body}`);
+        note.addNote(argv.title, argv.body);
     }
 })
 
