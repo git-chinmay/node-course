@@ -1,4 +1,5 @@
 const fs = require('fs')
+const chalk = require('chalk')
 
 function getNotes() {
     return "My Notes!";
@@ -16,15 +17,30 @@ function addNote(title, body){
             body: body
         });
         saveNotes(notes);
-        console.log("New note added.");
+        console.log(chalk.bgGreen("New note added."));
     }
     else{
-        console.log("Note title already exists.");
+        console.log(chalk.bgYello("Note title already exists."));
     }
 
 }
 
 
+function removeNote(title){
+    notes = loadNotes();
+    const filteredNote = notes.filter(function(note){
+        return note.title !== title;
+    });
+
+
+    if (filteredNote.length < notes.length){
+        console.log(chalk.bgGreen(`${title} note removed.`))
+        saveNotes(filteredNote);
+    }
+    else{console.log(chalk.bgRed(`${title} not found.`))}
+
+    
+}
 
 function loadNotes(){
     try{
@@ -32,6 +48,7 @@ function loadNotes(){
         const dataBuffer = fs.readFileSync('notes.json');
         const dataJSON = dataBuffer.toString();
         return JSON.parse(dataJSON);
+        //console.log(JSON.parse(dataJSON));
 
     }catch(e){
         return [];
@@ -39,6 +56,9 @@ function loadNotes(){
     }
 
 }
+
+
+
 
 
 function saveNotes(notes){
@@ -50,5 +70,6 @@ function saveNotes(notes){
 // To export more than one element
 module.exports = {
     getNotes: getNotes,
-    addNote: addNote
+    addNote: addNote,
+    removeNote: removeNote
 }
