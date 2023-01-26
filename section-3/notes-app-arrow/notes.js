@@ -2,7 +2,6 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 
-const getNotes = () => { console.log("Your Note...")}
 
 const listNotes = () => {
     console.log(chalk.blue("Here is your list of note.."))
@@ -11,11 +10,16 @@ const listNotes = () => {
 
 }
 
+
+
 const addNote = (title, body) => {
     notes = loadNotes();
-    const duplicateNote = notes.filter((note) => note.title === title);
+    //const duplicateNote = notes.filter((note) => note.title === title);
+    //filter: will loop through all the elements even if a match found, where find: stopped at first match
+    const duplicateNote = notes.find((note) => note.title === title);
 
-    if (duplicateNote.length === 0){
+    //if (duplicateNote.length === 0){
+    if (!duplicateNote){
         notes.push({
             title: title,
             body: body
@@ -30,6 +34,7 @@ const addNote = (title, body) => {
 }
 
 
+
 const removeNote = (title) => {
     notes = loadNotes();
     const filteredNote = notes.filter((note) => note.title !== title);
@@ -39,9 +44,22 @@ const removeNote = (title) => {
         saveNotes(filteredNote);
     }
     else{console.log(chalk.bgRed(`${title} not found.`))}
-
     
 }
+
+
+const readNote = (title) => {
+    const notes = loadNotes();
+    const findNote = notes.find((note) => note.title === title);
+    if (findNote){
+        console.log(`Note title: ${chalk.bold.green(findNote.title)}`)
+        console.log(`Note body: ${chalk.italic.magenta(findNote.body)}`)
+    }
+    else{
+        console.log(chalk.bgRed(`"${title}" titled note not found.`));
+    }
+}
+
 
 
 const loadNotes = () => {
@@ -70,8 +88,8 @@ const saveNotes = (notes) => {
 //module.exports = getNots;
 // To export more than one element
 module.exports = {
-    getNotes: getNotes,
     addNote: addNote,
     removeNote: removeNote,
-    listNotes: listNotes
+    listNotes: listNotes,
+    readNote: readNote
 }
