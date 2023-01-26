@@ -1,0 +1,1 @@
+### Replacing with ES6 method notation and concise arrow function wherever possible
