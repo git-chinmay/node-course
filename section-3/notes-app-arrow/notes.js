@@ -18,6 +18,8 @@ const addNote = (title, body) => {
     //filter: will loop through all the elements even if a match found, where find: stopped at first match
     const duplicateNote = notes.find((note) => note.title === title);
 
+    debugger // To debug the code. Remove it once debuggin the code
+
     //if (duplicateNote.length === 0){
     if (!duplicateNote){
         notes.push({
