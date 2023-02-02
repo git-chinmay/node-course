@@ -1,6 +1,19 @@
 const forecast = require('./utils/forecast')
 
-forecast.foreCast("paradeep", (error, data)=>{
-    console.log('Error:', error);
-    console.log('Data:', data);
-});
+
+//const city = "paradeep"
+//Taking from comamnd line
+const city = process.argv[2];
+
+if (city){
+    
+    forecast.foreCast(city, (error, data)=>{
+        if (error){
+            return console.log(error);
+        }
+        console.log(data);
+    });
+
+}else{
+    console.log("pass the city name as command line argument!")
+}
