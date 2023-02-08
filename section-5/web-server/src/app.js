@@ -19,6 +19,12 @@ app.use(express.static(pathToPublicDirectory))
 //Using templatine engine for dynamic rendering
 app.set('view engine', 'hbs'); //library installed via npm
 
+
+//We can tell express where to find views folder otherwise defautly i looks here this app.js present
+const pathToView = path.join(__dirname, '../views') //we can also call the 'folder' something else than views
+app.set('views', pathToView)
+
+
 //Bcz of above static express will never run below root page so we can comment/remove it
 //app.com
 // app.get('', (req, res)=>{
