@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path') //core module no need to install
+const hbs = require('hbs')
 
 // NOTES FOR QUICK LEARNING //
 //req = Request received from user
@@ -21,8 +22,12 @@ app.set('view engine', 'hbs'); //library installed via npm
 
 
 //We can tell express where to find views folder otherwise defautly i looks here this app.js present
-const pathToView = path.join(__dirname, '../views') //we can also call the 'folder' something else than views
+const pathToView = path.join(__dirname, '../templates/views') //we can also call the 'folder' something else than views
 app.set('views', pathToView)
+
+//Creating Partials template
+const pathToPartials = path.join(__dirname, '../templates/partials')
+hbs.registerPartials(pathToPartials);
 
 
 //Bcz of above static express will never run below root page so we can comment/remove it
@@ -71,7 +76,8 @@ app.get('/about', (req, res) => {
 
 app.get('/help', (req, res) => {
     res.render('help', {
-        title: 'Help Page'
+        title: 'Help Page',
+        name: 'chinmay'
     })
 })
 
