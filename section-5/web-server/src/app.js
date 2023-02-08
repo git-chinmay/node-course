@@ -12,8 +12,12 @@ const path = require('path') //core module no need to install
 const app = express();
 const pathToPublicDirectory = path.join(__dirname, '../public');
 
+
 //Making express to use the static public folder for rendering
 app.use(express.static(pathToPublicDirectory))
+
+//Using templatine engine for dynamic rendering
+app.set('view engine', 'hbs'); //library installed via npm
 
 //Bcz of above static express will never run below root page so we can comment/remove it
 //app.com
@@ -40,6 +44,30 @@ app.use(express.static(pathToPublicDirectory))
 //     res.send('<h1>My Node js based app</h1>')
 // })
 
+
+/// RENDERING HBS ///
+app.get('', (req, res) => {
+    //res.render('index'); //It will point to the views folder index.hbs file.
+    //We can pass values for dynaminsim
+    res.render('index', {
+        title: 'weather app',
+        name: 'chinmay'
+    })
+})
+
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'about me',
+        name: 'chinmay'
+    })
+})
+
+
+app.get('/help', (req, res) => {
+    res.render('help', {
+        title: 'Help Page'
+    })
+})
 
 //weather page
 //Passing JS object, express convert it inot json and returned to webpage
