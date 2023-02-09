@@ -91,6 +91,23 @@ app.get('/weather', (req, res)=>{
     })
 })
 
+
+
+app.get("/help/*", (req, res) => {
+    res.render('404', {
+        title: "help/page",
+        name: "Chinmay",
+        errorMessage: "Help article not found."
+    });
+})
+app.get("*", (req, res) => {
+    res.render('404', {
+        title: "404 Error",
+        name: "Chinmay",
+        errorMessage: "Page not found"
+    });
+})
+
 //Starting the Express server
 //Callback function is optional
 //3000 is not default port. Its developmental port for testing. You can use anything.
