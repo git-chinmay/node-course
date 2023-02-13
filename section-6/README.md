@@ -1,0 +1,1 @@
+## Accessing API from Browser (Weather APP)
