@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path') //core module no need to install
 const hbs = require('hbs')
+const forecast = require('./utils/forecast')
 
 
 const app = express();
@@ -80,11 +81,25 @@ app.get('/weather', (req, res)=>{
         })
 
     }
-    res.send({
-        address: req.query.address,
-        temperture: 26,
-        unit: 'Centigrade'
+
+    forecast.foreCast(req.query.address, (error, data) => {
+        if (error){
+            return res.send({
+                error
+            })
+        }
+
+        res.send({
+            address: req.query.address,
+            temperture: data,
+            unit: 'Centigrade'
+        }) 
     })
+    // res.send({
+    //     address: req.query.address,
+    //     temperture: 26,
+    //     unit: 'Centigrade'
+    // })
 })
 
 app.get("/help/*", (req, res) => {
