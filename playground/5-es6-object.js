@@ -49,4 +49,11 @@ const transaction = (type, {label, price}) => {
 
 transaction('buy', product);
 
+//Defining the default value for the passing object
+const transaction1 = (type, {label='default', price=0} = {}) =>{
+    console.log(type, label, price);
+}
+
+transaction1('sell');
+
 
