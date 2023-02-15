@@ -13,15 +13,29 @@ fetch('https://puzzle.mead.io/puzzle').then((response) => {
 
 //Code challenge: Fetch the weather data using browser http request fetch method
 
-fetch('http://localhost:3000/weather?address=kashmir').then((response)=>{
+const weatherAPI = (location) =>{
+
+    fetch(`http://localhost:3000/weather?address=${location}`).then((response)=>{
     
-        response.json().then((data) => {
-            if (data.error){
-                console.log(data.error);
-            }else{
-                console.log(data.address); //using the object from app.js /weather section
-                console.log(data.temperture);
-            }
+            response.json().then((data) => {
+                if (data.error){
+                    console.log(data.error);
+                }else{
+                    console.log(data.address); //using the object from app.js /weather section
+                    console.log(data.temperture);
+                }
         
+        })
     })
-})
+
+}
+
+
+const weatherForm = document.querySelector('form');
+const search = document.querySelector('input');
+weatherForm.addEventListener('submit', (e)=>{
+    e.preventDefault(); // To stop refreshing the browser
+    const location = search.value;
+    console.log('location',location);
+    weatherAPI(location);
+});
