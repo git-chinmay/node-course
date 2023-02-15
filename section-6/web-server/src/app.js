@@ -118,6 +118,7 @@ app.get("*", (req, res) => {
 })
 
 //Starting the Express server
-app.listen(3000, ()=>{
-    console.log("Server listening on 3000");
+const port = 3000;
+app.listen(port, ()=>{
+    console.log(`Server listening on ${port}`);
 })
