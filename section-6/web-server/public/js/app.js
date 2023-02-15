@@ -19,10 +19,13 @@ const weatherAPI = (location) =>{
     
             response.json().then((data) => {
                 if (data.error){
-                    console.log(data.error);
+                    //console.log(data.error);
+                    messageOne.textContent = data.error;
                 }else{
-                    console.log(data.address); //using the object from app.js /weather section
-                    console.log(data.temperture);
+                    //console.log(data.address); //using the object from app.js /weather section
+                    //console.log(data.temperture);
+                    messageOne.textContent = data.address;
+                    messageTwo.textContent = data.temperture;
                 }
         
         })
@@ -33,9 +36,15 @@ const weatherAPI = (location) =>{
 
 const weatherForm = document.querySelector('form');
 const search = document.querySelector('input');
+const messageOne = document.querySelector('#message-1');
+const messageTwo = document.querySelector('#message-2');
+
+
+
 weatherForm.addEventListener('submit', (e)=>{
     e.preventDefault(); // To stop refreshing the browser
     const location = search.value;
-    console.log('location',location);
+    messageTwo.textContent = "";
+    messageOne.textContent = 'Loading...'
     weatherAPI(location);
 });
