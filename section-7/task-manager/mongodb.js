@@ -144,12 +144,42 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true},
 // But in real world rarely we do that as mongo db already inserting an id for us.
 
 
-const { MongoClient, ObjectId } = require('mongodb');
+// const { MongoClient, ObjectId } = require('mongodb');
 
-//Getting GUID
-const objid = new ObjectId();
-id = objid.toString();
-console.log(`Genereted Id: ${id}`);
+// //Getting GUID
+// const objid = new ObjectId();
+// id = objid.toString();
+// console.log(`Genereted Id: ${id}`);
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+// async function main() {
+//   // Use connect method to connect to the server
+//   await client.connect();
+//   console.log('Connected successfully to server');
+//   const db = client.db(dbName);
+//   //const collection = db.collection('users')
+//   const oneUser = await db.collection('users').insertOne({_id: id, name: "kunny", age:100})
+//   console.log("Inserted user document => ", oneUser);
+
+//   return 'done.';
+// }
+
+// main()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close());
+
+
+
+/// QUERYING DOCUMENTS ///
+
+const { MongoClient } = require('mongodb');
+
 // Connection URL
 const url = 'mongodb://127.0.0.1:27017';
 const client = new MongoClient(url);
@@ -158,19 +188,21 @@ const client = new MongoClient(url);
 const dbName = 'task-manager-db';
 
 async function main() {
-  // Use connect method to connect to the server
-  await client.connect();
-  console.log('Connected successfully to server');
-  const db = client.db(dbName);
-  //const collection = db.collection('users')
-  const oneUser = await db.collection('users').insertOne({_id: id, name: "kunny", age:100})
-  console.log("Inserted user document => ", oneUser);
+    // Use connect method to connect to the server
+    await client.connect();
+    console.log('Connected successfully to server');
+    const db = client.db(dbName);
+    //Will fetch all records
+    //const findresult = await db.collection('users').find({}).toArray();
 
-  return 'done.';
+    //Conditial fetch
+    const findresult = await db.collection('users').find({ name: 'Dany' }).toArray();
+    console.log('Found documents =>', findresult);
+
+    return 'done.';
 }
 
 main()
   .then(console.log)
   .catch(console.error)
   .finally(() => client.close());
-
