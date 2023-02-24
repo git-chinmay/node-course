@@ -1,5 +1,8 @@
 //Practicing CRUD
 
+
+/*  NOTE: THIS CODE FROM COURSE NOT WORKING HENCE USE THE SECOND TYPE
+
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
@@ -9,7 +12,8 @@ const connectionURL = 'mongodb://127.0.0.1:27017'; //Do not type localhost bcz i
 // DB Name
 const databaseName = "task-manager-db";
 
-MongoClient.connect(connectionURL, { useNewUrlParser: true}, (error, client)=>{
+MongoClient.connect(connectionURL, { useNewUrlParser: true}, 
+    (error, client)=>{
     if (error){
         return console.log("Unable to connect to db.");
     }
@@ -19,6 +23,117 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true}, (error, client)=>{
     db.collection('users').insertOne({
         name: "Andrew",
         age: 30
+    }, (error, result) => {
+        if(error){
+            return console.log('Unbale to insert User.')
+        }
+
+        console.log(result.ops);
     })
 })
 
+*/
+
+
+////////////////////////////////////////////////////////
+/////// TYPE-2 FROM API DOCUMENT //////////////
+//https://mongodb.github.io/node-mongodb-native/5.0/
+///////////////////////////////////////////////////////
+
+// const { MongoClient } = require('mongodb');
+// // or as an es module:
+// // import { MongoClient } from 'mongodb'
+
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+// async function main() {
+//   // Use connect method to connect to the server
+//   await client.connect();
+//   console.log('Connected successfully to server');
+//   const db = client.db(dbName); // creating a db or collection
+//   //const collection = db.collection('users'); //adding a table name user to collection
+
+//   // insert one document(one row) at a time//
+//   //const insertUser = await collection.insertOne({name: "Chinmay", age: 32})
+//   //console.log("Inserted user document => ", insertUser);
+
+//   // insert many document at a time
+//   const manyUser = await collection.insertMany([{name: "Angela", age:34}, {name: "Dany", age: 34}])
+//   console.log("Inserted user document => ", manyUser);
+
+
+
+//   return 'done.';
+// }
+
+// main()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close());
+
+
+
+////////////////////////////////////////////////////////////////////////////
+/////// TYPE-3 COMBINING APPROACH OF BOTH API DOC AND COURSE //////////////
+//https://mongodb.github.io/node-mongodb-native/5.0/
+////////////////////////////////////////////////////////////////////////////
+
+
+const { MongoClient } = require('mongodb');
+// or as an es module:
+// import { MongoClient } from 'mongodb'
+
+// Connection URL
+const url = 'mongodb://127.0.0.1:27017';
+const client = new MongoClient(url);
+
+// Database Name
+const dbName = 'task-manager-db';
+
+async function main() {
+
+    // Use connect method to connect to the server
+    await client.connect();
+    console.log('Connected successfully to server');
+    const db = client.db(dbName); // creating a db or collection
+
+    // await db.collection('users').insertOne({
+    //     name: "Jenny",
+    //     age: 20
+    // }, (error, result) => {
+    //     if(error){
+    //         return console.log("Unbale to insert User.")
+    //     }
+    //     console.log(result.ops);
+    // })
+
+    await db.collection('tasks').insertMany([{
+        task: "PHP Receipts",
+        complete: true
+    }, 
+    {
+        task: "Node course",
+        complete: false,
+    }, 
+    {
+        task: "Market analysis",
+        complete: false
+    }], (error, result) => {
+        if (error){
+            return console.log("Unable to insert doc.")
+        }
+        console.log(result.ops)
+    })
+
+  return 'done.';
+}
+
+main()
+  .then(console.log)
+  .catch(console.error)
+  .finally(() => client.close());
