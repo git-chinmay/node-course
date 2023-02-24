@@ -84,10 +84,72 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true},
 ////////////////////////////////////////////////////////////////////////////
 
 
-const { MongoClient } = require('mongodb');
-// or as an es module:
-// import { MongoClient } from 'mongodb'
+// const { MongoClient } = require('mongodb');
+// // or as an es module:
+// // import { MongoClient } from 'mongodb'
 
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+// async function main() {
+
+//     // Use connect method to connect to the server
+//     await client.connect();
+//     console.log('Connected successfully to server');
+//     const db = client.db(dbName); // creating a db or collection
+
+//     // await db.collection('users').insertOne({
+//     //     name: "Jenny",
+//     //     age: 20
+//     // }, (error, result) => {
+//     //     if(error){
+//     //         return console.log("Unbale to insert User.")
+//     //     }
+//     //     console.log(result.ops);
+//     // })
+
+//     await db.collection('tasks').insertMany([{
+//         task: "PHP Receipts",
+//         complete: true
+//     }, 
+//     {
+//         task: "Node course",
+//         complete: false,
+//     }, 
+//     {
+//         task: "Market analysis",
+//         complete: false
+//     }], (error, result) => {
+//         if (error){
+//             return console.log("Unable to insert doc.")
+//         }
+//         console.log(result.ops)
+//     })
+
+//   return 'done.';
+// }
+
+// main()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close());
+
+
+/// ITS ADVISABLE TO USE TYPE-2 THE API DOC APPROACH AS ITS UPDATED ONE ///
+// Insert a record to 'user' document with id.
+// But in real world rarely we do that as mongo db already inserting an id for us.
+
+
+const { MongoClient, ObjectId } = require('mongodb');
+
+//Getting GUID
+const objid = new ObjectId();
+id = objid.toString();
+console.log(`Genereted Id: ${id}`);
 // Connection URL
 const url = 'mongodb://127.0.0.1:27017';
 const client = new MongoClient(url);
@@ -96,39 +158,13 @@ const client = new MongoClient(url);
 const dbName = 'task-manager-db';
 
 async function main() {
-
-    // Use connect method to connect to the server
-    await client.connect();
-    console.log('Connected successfully to server');
-    const db = client.db(dbName); // creating a db or collection
-
-    // await db.collection('users').insertOne({
-    //     name: "Jenny",
-    //     age: 20
-    // }, (error, result) => {
-    //     if(error){
-    //         return console.log("Unbale to insert User.")
-    //     }
-    //     console.log(result.ops);
-    // })
-
-    await db.collection('tasks').insertMany([{
-        task: "PHP Receipts",
-        complete: true
-    }, 
-    {
-        task: "Node course",
-        complete: false,
-    }, 
-    {
-        task: "Market analysis",
-        complete: false
-    }], (error, result) => {
-        if (error){
-            return console.log("Unable to insert doc.")
-        }
-        console.log(result.ops)
-    })
+  // Use connect method to connect to the server
+  await client.connect();
+  console.log('Connected successfully to server');
+  const db = client.db(dbName);
+  //const collection = db.collection('users')
+  const oneUser = await db.collection('users').insertOne({_id: id, name: "kunny", age:100})
+  console.log("Inserted user document => ", oneUser);
 
   return 'done.';
 }
@@ -137,3 +173,4 @@ main()
   .then(console.log)
   .catch(console.error)
   .finally(() => client.close());
+
