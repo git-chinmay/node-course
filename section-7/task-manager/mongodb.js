@@ -179,6 +179,98 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true},
 
 /// QUERYING DOCUMENTS ///
 
+// const { MongoClient, ObjectId } = require('mongodb');
+
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+// async function main() {
+//     // Use connect method to connect to the server
+//     await client.connect();
+//     console.log('Connected successfully to server');
+//     const db = client.db(dbName);
+//     //Will fetch all records
+//     //const findresult = await db.collection('users').find({}).toArray();
+
+//     //Conditial fetch
+//     //const findresult = await db.collection('users').find({ name: 'Dany' }).toArray();
+
+//     // const findresult = await db.collection('users')
+//     //                             .find({_id: new ObjectId("63f849bb54db4bb9d00d9084")})
+//     //                             .toArray()
+
+//     //Find multiple records
+//     const findresult = await db.collection('tasks')
+//                                 .find({complete: false})
+//                                 .toArray()
+                                
+
+//     const resultCount = await db.collection('tasks')
+//                                 .find({complete: false})
+//                                 .count()
+
+//     console.log('Found documents =>', findresult);
+//     console.log('Document Count =>', resultCount);
+
+//     return 'done.';
+// }
+
+// main()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close());
+
+
+
+//// UPDATING A RECORD IN DOCUMENT ////
+
+// const { MongoClient, ObjectId } = require('mongodb');
+
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+// async function main() {
+//     // Use connect method to connect to the server
+//     await client.connect();
+//     console.log('Connected successfully to server');
+//     const db = client.db(dbName);
+    
+
+//     const updateResult = await db.collection('users')
+//                                 .updateOne({ name: "kunny" }, 
+//                                            { $set: { age: 500 } });
+    
+//     console.log('Updated documents =>', updateResult);
+
+//     // const findResult = await db.collection('users')
+//     //                         .find({ name : "kunny"}) //toArray will not work with findOne()
+//     //                         .toArray();
+//     // console.log(findResult);
+
+//     return 'done.';
+// }
+
+// main()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close());
+
+
+
+/////////////////////////////////////////////////////
+////  USING THE FUNCTION LITTLE BIT DIFFERENTLY ///
+//////////////////////////////////////////////////////
+
+
+
 const { MongoClient, ObjectId } = require('mongodb');
 
 // Connection URL
@@ -188,38 +280,34 @@ const client = new MongoClient(url);
 // Database Name
 const dbName = 'task-manager-db';
 
-async function main() {
-    // Use connect method to connect to the server
-    await client.connect();
-    console.log('Connected successfully to server');
-    const db = client.db(dbName);
-    //Will fetch all records
-    //const findresult = await db.collection('users').find({}).toArray();
 
-    //Conditial fetch
-    //const findresult = await db.collection('users').find({ name: 'Dany' }).toArray();
+// Use connect method to connect to the server
+//await client.connect();
+client.connect();
+console.log('Connected successfully to server');
+const db = client.db(dbName);
 
-    // const findresult = await db.collection('users')
-    //                             .find({_id: new ObjectId("63f849bb54db4bb9d00d9084")})
-    //                             .toArray()
+// const updateResultPromise = db.collection('users')
+//                             .updateOne({ name: "kunny" }, 
+//                                        { $set: { age: 51 } });
 
-    //Find multiple records
-    const findresult = await db.collection('tasks')
-                                .find({complete: false})
-                                .toArray()
-                                
+// console.log('Updated documents =>', updateResultPromise);
 
-    const resultCount = await db.collection('tasks')
-                                .find({complete: false})
-                                .count()
 
-    console.log('Found documents =>', findresult);
-    console.log('Document Count =>', resultCount);
+//UpdateMany
+const updateResultPromise = db.collection('tasks')
+                            .updateMany({ complete: false }, 
+                                       { $set: { complete: true } });
 
-    return 'done.';
-}
+console.log('Updated documents =>', updateResultPromise);
 
-main()
-  .then(console.log)
-  .catch(console.error)
-  .finally(() => client.close());
+updateResultPromise.then((result)=>{
+    console.log("Modified count: ", result.modifiedCount);
+}).catch((error)=>{
+    console.log(error);
+}).finally(() => client.close());
+
+// return 'done.';
+
+
+
