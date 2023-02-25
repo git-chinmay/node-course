@@ -1,4 +1,5 @@
 //Practicing CRUD
+// Reference for commands: https://mongodb.github.io/node-mongodb-native/5.0/
 
 
 /*  NOTE: THIS CODE FROM COURSE NOT WORKING HENCE USE THE SECOND TYPE
@@ -178,7 +179,7 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true},
 
 /// QUERYING DOCUMENTS ///
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 // Connection URL
 const url = 'mongodb://127.0.0.1:27017';
@@ -196,8 +197,24 @@ async function main() {
     //const findresult = await db.collection('users').find({}).toArray();
 
     //Conditial fetch
-    const findresult = await db.collection('users').find({ name: 'Dany' }).toArray();
+    //const findresult = await db.collection('users').find({ name: 'Dany' }).toArray();
+
+    // const findresult = await db.collection('users')
+    //                             .find({_id: new ObjectId("63f849bb54db4bb9d00d9084")})
+    //                             .toArray()
+
+    //Find multiple records
+    const findresult = await db.collection('tasks')
+                                .find({complete: false})
+                                .toArray()
+                                
+
+    const resultCount = await db.collection('tasks')
+                                .find({complete: false})
+                                .count()
+
     console.log('Found documents =>', findresult);
+    console.log('Document Count =>', resultCount);
 
     return 'done.';
 }
