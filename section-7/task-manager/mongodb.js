@@ -269,7 +269,46 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true},
 ////  USING THE FUNCTION LITTLE BIT DIFFERENTLY ///
 //////////////////////////////////////////////////////
 
+// const { MongoClient, ObjectId } = require('mongodb');
 
+// // Connection URL
+// const url = 'mongodb://127.0.0.1:27017';
+// const client = new MongoClient(url);
+
+// // Database Name
+// const dbName = 'task-manager-db';
+
+
+// // Use connect method to connect to the server
+// //await client.connect();
+// client.connect();
+// console.log('Connected successfully to server');
+// const db = client.db(dbName);
+
+// // const updateResultPromise = db.collection('users')
+// //                             .updateOne({ name: "kunny" }, 
+// //                                        { $set: { age: 51 } });
+
+// // console.log('Updated documents =>', updateResultPromise);
+
+
+// //UpdateMany
+// const updateResultPromise = db.collection('tasks')
+//                             .updateMany({ complete: false }, 
+//                                        { $set: { complete: true } });
+
+// console.log('Updated documents =>', updateResultPromise);
+
+// updateResultPromise.then((result)=>{
+//     console.log("Modified count: ", result.modifiedCount);
+// }).catch((error)=>{
+//     console.log(error);
+// }).finally(() => client.close());
+
+
+//////////////////////////
+/// DELETE DOCUMENTS ///
+//////////////////////////
 
 const { MongoClient, ObjectId } = require('mongodb');
 
@@ -287,27 +326,16 @@ client.connect();
 console.log('Connected successfully to server');
 const db = client.db(dbName);
 
-// const updateResultPromise = db.collection('users')
-//                             .updateOne({ name: "kunny" }, 
-//                                        { $set: { age: 51 } });
+//DeleteMany
+const deletedResultPromise = db.collection('users')
+                            .deleteMany({ age: 3 });
 
-// console.log('Updated documents =>', updateResultPromise);
+console.log('Updated documents =>', deletedResultPromise);
 
-
-//UpdateMany
-const updateResultPromise = db.collection('tasks')
-                            .updateMany({ complete: false }, 
-                                       { $set: { complete: true } });
-
-console.log('Updated documents =>', updateResultPromise);
-
-updateResultPromise.then((result)=>{
-    console.log("Modified count: ", result.modifiedCount);
+deletedResultPromise.then((result)=>{
+    console.log("Deleted Count", result.deletedCount);
 }).catch((error)=>{
     console.log(error);
 }).finally(() => client.close());
-
-// return 'done.';
-
 
 
