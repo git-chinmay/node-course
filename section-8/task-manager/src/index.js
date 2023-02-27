@@ -1,0 +1,26 @@
+const express = require('express')
+require("./db/mongoose") // This is to make usre mongodb keep running as we dont want to disturb it
+const User = require("./models/users")
+
+
+const app = express();
+const port = process.env.PORT || 3000
+
+//Parsing incoming data into object
+app.use(express.json());
+
+app.post("/users", (req, res)=>{
+    console.log(req.body);
+    const user = new User(req.body);
+    user.save().then(()=>{
+        res.send(user);
+    }).catch((error)=>{
+        res.send(error);
+    })
+
+    
+})
+
+app.listen(port, ()=>{
+    console.log(`Server listining on port ${port}`);
+})
