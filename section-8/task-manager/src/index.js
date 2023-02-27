@@ -1,6 +1,6 @@
 const express = require('express')
 require("./db/mongoose") // This is to make usre mongodb keep running as we dont want to disturb it
-const User = require("./models/users")
+const users = require("./models/users")
 
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.post("/users", (req, res)=>{
     console.log(req.body);
-    const user = new User(req.body);
+    const user = new users.User(req.body);
     user.save().then(()=>{
         res.send(user);
     }).catch((error)=>{
