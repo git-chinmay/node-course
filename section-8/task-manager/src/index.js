@@ -10,6 +10,8 @@ const port = process.env.PORT || 3000
 //Parsing incoming data into object
 app.use(express.json());
 
+
+// Create an User
 app.post("/users", (req, res)=>{
     console.log(req.body);
     const user = new users.User(req.body);
@@ -25,6 +27,54 @@ app.post("/users", (req, res)=>{
 })
 
 
+//Get all user details
+app.get("/users", (req, res)=>{
+    users.User.find({}).then((users)=>{
+        res.send(users);
+    }).catch((e)=>{
+        res.status(500).send();
+    })
+})
+
+
+//Get an user by id
+app.get("/users/:id", (req, res)=>{
+    //console.log(req.params); //{id: '12345'}
+    const _id = req.params.id;
+    users.User.findById(_id).then((userx) => {
+        if (!userx){
+            return res.status(404).send();
+        }
+        res.send(userx);
+    }).catch((e)=>{
+        res.status(500).send("Something went wrong!");
+    })
+})
+
+
+// Get all tasks
+app.get("/tasks", (req, res)=>{
+    tasks.Tasks.find({}).then((taskList)=>{
+        res.send(taskList);
+
+    }).catch((error)=>{
+        res.status(500).send("Something went wrong!");
+    })
+})
+
+// Get a task by id
+app.get("/tasks/:id", (req, res)=>{
+    const _id = req.params.id;
+    tasks.Tasks.findById(_id).then((task)=>{
+        if(!task){
+            res.status(404).send("Task not found!");
+        }
+        res.send(task);
+    }).catch((e)=>{
+        res.status(500).send("Something went wrong");
+    })
+})
+// Create a task
 app.post("/tasks", (req, res) =>{
     console.log(req.body);
     const task = new tasks.Tasks(req.body);
