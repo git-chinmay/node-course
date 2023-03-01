@@ -65,19 +65,19 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
 
 
 // Creating a new model called Tasks
-const Tasks = mongoose.model('Tasks', {
-    descriptions:{
-        type: String,
-        trim: true,
-        required: true
-    },
+// const Tasks = mongoose.model('Tasks', {
+//     descriptions:{
+//         type: String,
+//         trim: true,
+//         required: true
+//     },
 
-    completed: {
-        type: Boolean,
-        default: false
-    }
+//     completed: {
+//         type: Boolean,
+//         default: false
+//     }
 
-})
+// })
 
 //Creating a new Task instance
 
