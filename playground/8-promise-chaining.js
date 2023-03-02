@@ -13,7 +13,7 @@ const add = (a, b) => {
 // })
 
 //What if we want to add new number to sum 
-//We could r=write as below
+//We could rewrite as below
 // add(1, 2).then((sum) => {
 //     console.log(sum);
 //     add(sum, 5).then((sum2) => {
