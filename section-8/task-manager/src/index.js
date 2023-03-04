@@ -96,37 +96,45 @@ app.get("/users/:id", async (req, res)=>{
 
 
 // Get all tasks
-app.get("/tasks", (req, res)=>{
-    tasks.Tasks.find({}).then((taskList)=>{
-        res.send(taskList);
+app.get("/tasks", async (req, res)=>{
 
-    }).catch((error)=>{
+    try{
+        const taskList = await tasks.Tasks.find({});
+        res.send(taskList);
+    }catch(e){
         res.status(500).send("Something went wrong!");
-    })
+    }
 })
+
 
 // Get a task by id
-app.get("/tasks/:id", (req, res)=>{
+app.get("/tasks/:id", async (req, res)=>{
     const _id = req.params.id;
-    tasks.Tasks.findById(_id).then((task)=>{
-        if(!task){
+
+    try{
+        const taskFound = await tasks.Tasks.findById(_id);
+        if(!taskFound){
             res.status(404).send("Task not found!");
         }
-        res.send(task);
-    }).catch((e)=>{
-        res.status(500).send("Something went wrong");
-    })
+        res.send(taskFound);
+    }catch(e){
+        res.status(500).send("Something went wrong!");
+    }
 })
+
+
 // Create a task
-app.post("/tasks", (req, res) =>{
+app.post("/tasks", async (req, res) =>{
     console.log(req.body);
     const task = new tasks.Tasks(req.body);
-    task.save().then(()=>{
+    try{
+        await task.save()
         res.status(201).send(task);
-    }).catch((error)=>{
+    }catch(error){
         res.status(400).send(error);
-    })
+    }
 })
+
 
 app.listen(port, ()=>{
     console.log(`Server listining on port ${port}`);
