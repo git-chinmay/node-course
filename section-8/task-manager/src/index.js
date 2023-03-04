@@ -95,6 +95,39 @@ app.get("/users/:id", async (req, res)=>{
 })
 
 
+//Update an user
+//new: tru = create a new user before update
+//runValidators - runs the validator
+// These two are optiona params to findByIdANdUpdate
+app.patch("/users/:id", async (req, res) =>{
+
+    const updates = Object.keys(req.body); //fileds sent by client
+    const allowedUpdates = ["name", "age", "email", "password"]
+    const isValid = updates.every((update) => {
+        return allowedUpdates.includes(update);
+    })
+
+    if(!isValid){
+        return res.status(400).send("Error: Invalid update.")
+    }
+
+    try{
+        const userx = await users.User.findByIdAndUpdate(req.params.id, 
+                                                         req.body, {new: true, runValidators: true});
+        
+        
+        if(!userx){
+            return res.status(404).send("No user found");
+        }
+        res.send(userx);
+    }
+    catch(error){
+        res.status(400).send(error);
+
+    }
+})
+
+
 // Get all tasks
 app.get("/tasks", async (req, res)=>{
 
@@ -114,7 +147,7 @@ app.get("/tasks/:id", async (req, res)=>{
     try{
         const taskFound = await tasks.Tasks.findById(_id);
         if(!taskFound){
-            res.status(404).send("Task not found!");
+            return res.status(404).send("Task not found!");
         }
         res.send(taskFound);
     }catch(e){
