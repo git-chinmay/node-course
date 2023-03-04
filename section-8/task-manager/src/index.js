@@ -114,8 +114,7 @@ app.patch("/users/:id", async (req, res) =>{
     try{
         const userx = await users.User.findByIdAndUpdate(req.params.id, 
                                                          req.body, {new: true, runValidators: true});
-        
-        
+                
         if(!userx){
             return res.status(404).send("No user found");
         }
@@ -124,6 +123,22 @@ app.patch("/users/:id", async (req, res) =>{
     catch(error){
         res.status(400).send(error);
 
+    }
+})
+
+
+// Delete an user by id
+app.delete("/users/:id", async (req, res) => {
+
+    try{
+        const deleteUser = await users.User.findByIdAndDelete(req.params.id);
+        if(!deleteUser){
+            return res.status(404).send("User not found")
+        }
+        res.send("Deleted");
+
+    }catch(error){
+        res.status(500).send(error);
     }
 })
 
@@ -196,6 +211,23 @@ app.patch("/tasks/:id", async (req, res)=> {
 
     }
 })
+
+
+// Delete a task by id
+app.delete("/tasks/:id", async (req, res) => {
+
+    try{
+        const deleteTask = await tasks.Tasks.findByIdAndDelete(req.params.id);
+        if(!deleteTask){
+            return res.status(404).send("Task not found")
+        }
+        res.send("Deleted");
+
+    }catch(error){
+        res.status(500).send(error);
+    }
+})
+
 
 
 app.listen(port, ()=>{
