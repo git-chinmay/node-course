@@ -168,6 +168,35 @@ app.post("/tasks", async (req, res) =>{
     }
 })
 
+// Update a task
+
+app.patch("/tasks/:id", async (req, res)=> {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ["description", "completed"]
+    const isValid = updates.every((update)=>{
+        return allowedUpdates.includes(update);
+    })
+
+    if(!isValid){
+        return res.status(400).send("Error: Invalid update.")
+    }
+
+    try{
+
+        const updatedTask = await tasks.Tasks.findByIdAndUpdate(req.params.id, 
+            req.body, {new:true, runValidators:true})
+
+        if(!updatedTask){
+            return res.status(404).send("Error: Task not found.")
+        }
+        res.send(updatedTask);
+
+    }catch(error){
+        res.status(400).send(error);
+
+    }
+})
+
 
 app.listen(port, ()=>{
     console.log(`Server listining on port ${port}`);
