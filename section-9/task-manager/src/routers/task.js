@@ -57,13 +57,21 @@ router.patch("/tasks/:id", async (req, res)=> {
 
     try{
 
-        const updatedTask = await tasks.Tasks.findByIdAndUpdate(req.params.id, 
-            req.body, {new:true, runValidators:true})
+        // const updatedTask = await tasks.Tasks.findByIdAndUpdate(req.params.id, 
+        //     req.body, {new:true, runValidators:true})
 
-        if(!updatedTask){
+        const findTaskObject = await tasks.Tasks.findById(req.params.id);
+        updates.forEach((update)=>{
+            findTaskObject[update] = req.body[update];
+        })
+
+        //Applying middleware
+        await findTaskObject.save()
+
+        if(!findTaskObject){
             return res.status(404).send("Error: Task not found.")
         }
-        res.send(updatedTask);
+        res.send(findTaskObject);
 
     }catch(error){
         res.status(400).send(error);
@@ -77,6 +85,7 @@ router.delete("/tasks/:id", async (req, res) => {
 
     try{
         const deleteTask = await tasks.Tasks.findByIdAndDelete(req.params.id);
+        
         if(!deleteTask){
             return res.status(404).send("Task not found")
         }
