@@ -1,2 +1,5 @@
 to start mongodb in local:
 '(anaconda3)'PS C:\Users\Chinmay\mongodb\bin> .\mongod.exe --dbpath="C:\Users\Chinmay\mongodb-data"
+
+Running the dev:
+--> npm run dev
