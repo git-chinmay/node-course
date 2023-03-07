@@ -6,7 +6,7 @@
 
 // const doWork = async () => { }
 // console.log(doWork());
-// promise(undefined) - Always retuns a promise fulfilled by the value we definded
+// Output = promise(undefined) - Always retuns a promise fulfilled by the value we definded
 
 // const doWork = async () => { 
 //     return "Akira";
