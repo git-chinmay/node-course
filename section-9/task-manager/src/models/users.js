@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
         trim: true,
         lowercase: true,
         validate(value){
@@ -49,7 +50,25 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-//We need middleware before the event(create user)
+
+// Binding our custom find function to user schema
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({ email })
+    if (!user){
+        throw new Error("Email mismatch. Unable to Login!")
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch){
+        throw new Error("Password mismatch. Unable to login!")
+    }
+
+    return user;
+
+} 
+
+//We need middleware before the event(create user)- Hashing the password
 userSchema.pre('save', async function(next){
     const user = this;
     console.log("Just before saving!");

@@ -12,7 +12,7 @@ const express = require('express');
 const users = require("../models/users")
 const router = new express.Router();
 
-// Rewriting above with async -await
+// Creat an user
 router.post("/users", async (req, res) => {
     console.log(req.body);
     const user = new users.User(req.body);
@@ -21,6 +21,18 @@ router.post("/users", async (req, res) => {
         res.status(201).send(user);
     }catch (error) {
         res.status(400).send(error);
+    }
+})
+
+// Login an user
+router.post("/users/login", async (req, res)=>{
+    try{
+        //Our custom find function
+        const userx = await users.User.findByCredentials(req.body.email, req.body.password);
+        res.send(userx);
+    }catch(e){
+        console.log(e);
+        res.status(400).send("Login Error!")
     }
 })
 
