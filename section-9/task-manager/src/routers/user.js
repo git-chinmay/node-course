@@ -18,8 +18,9 @@ router.post("/users", async (req, res) => {
     const user = new users.User(req.body);
     try{
         await user.save()
-        res.status(201).send(user);
-    }catch (error) {
+        const token = await user.generateAuthToken();
+        res.status(201).send({user, token});
+    }catch (error){
         res.status(400).send(error);
     }
 })
@@ -27,9 +28,10 @@ router.post("/users", async (req, res) => {
 // Login an user
 router.post("/users/login", async (req, res)=>{
     try{
-        //Our custom find function
-        const userx = await users.User.findByCredentials(req.body.email, req.body.password);
-        res.send(userx);
+        //Our custom find & generate token functions
+        const user = await users.User.findByCredentials(req.body.email, req.body.password);
+        const token = await user.generateAuthToken();
+        res.send({user, token});
     }catch(e){
         console.log(e);
         res.status(400).send("Login Error!")

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 /* When we passed the object mongoose model in behind Node convert it to schema.
 Here we are explicitly converted it into schema so that we can use middleware feature on it.
@@ -47,9 +48,28 @@ const userSchema = new mongoose.Schema({
             }
         }
 
-    }
+    },
+    tokens:[{
+        token:{
+            type: String,
+            required: true
+        }
+
+    }]
 })
 
+
+// instance methods are accessible on instances(called instance methods)
+//statics methonds are accessible on on model (called model methods)
+userSchema.methods.generateAuthToken = async function(){
+    const user = this;
+    const token = jwt.sign({ _id:user._id.toString() }, "thisisjsonwebtoken");
+    //Save the tokej to database
+    user.tokens = user.tokens.concat({ token })
+    await user.save();
+    return token;
+
+}
 
 // Binding our custom find function to user schema
 userSchema.statics.findByCredentials = async (email, password) => {
