@@ -73,13 +73,18 @@ userSchema.methods.generateAuthToken = async function(){
 
 // Binding our custom find function to user schema
 userSchema.statics.findByCredentials = async (email, password) => {
+    console.log(`email: ${email}, password:${password}`);
+
     const user = await User.findOne({ email })
+
     if (!user){
         throw new Error("Email mismatch. Unable to Login!")
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
+    // cant use await here otherwise isMatch will always be false bcz if condition will not wait for
+    // bcrypt opeartion hence it will set isMatch to default false.
+    const isMatch = bcrypt.compare(password, user.password);
+    
     if (!isMatch){
         throw new Error("Password mismatch. Unable to login!")
     }

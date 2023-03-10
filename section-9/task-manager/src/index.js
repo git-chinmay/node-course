@@ -2,6 +2,7 @@ const express = require('express')
 require("./db/mongoose") // This is to make usre mongodb keep running as we dont want to disturb it
 const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
+const apiMaintenance = require('./middleware/api-maintenance')
 
 
 const app = express();
@@ -20,16 +21,20 @@ const port = process.env.PORT || 3000
 
 
 //CODE CHALLENGE: Block all API calls syaing Maintenance mode
-app.use((req, res, next)=>{
-    // if(req.method){
-    //     res.status(503).send("API is under maintenance. Please come back later!")
-    // }
-    // next();
+// app.use((req, res, next)=>{
+//     // if(req.method){
+//     //     res.status(503).send("API is under maintenance. Please come back later!")
+//     // }
+//     // next();
 
-    //OR
-    res.status(503).send("API is under maintenance. Please come back later!")
+//     //OR
+//     res.status(503).send("API is under maintenance. Please come back later!")
 
-})
+// })
+
+
+//In realword we use separate middleware folder for these type of work
+//app.use(apiMaintenance);
 
 // Here we are using the functions provided by express in our application
 app.use(express.json()); //Parsing incoming data into object

@@ -10,6 +10,7 @@ STEPS TO FOLLOW
 
 const express = require('express');
 const users = require("../models/users")
+const auth = require("../middleware/auth")
 const router = new express.Router();
 
 // Creat an user
@@ -39,8 +40,10 @@ router.post("/users/login", async (req, res)=>{
 })
 
 
-//Get all user details
-router.get("/users", async (req, res)=>{
+/*Get all user details (will add mw function 'auth' as 2nd argument so that 
+route handle needs auth token to process the request.). Simple right. Just add a 2nd argument.
+*/
+router.get("/users", auth, async (req, res)=>{
 
     try{
         const usersx = await users.User.find({});
