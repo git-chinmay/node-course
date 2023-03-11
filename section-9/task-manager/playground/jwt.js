@@ -17,7 +17,7 @@ The whole purpose of the JWT is to verify the data(i.e {}) via the verifiable si
 const myFunction = async () => {
     //const token = jwt.sign({_id:'abc123'}, "thisisjsonwebtoken")
     // To add expiry to token use option {expiresIn: "7 days/10 minutes/30 seconds"}
-    const token = jwt.sign({_id:'abc123'}, "thisisjsonwebtoken", {expiresIn:'7days'})
+    const token = jwt.sign({password:'lancef1'}, "thisisjsonwebtoken", {expiresIn:'7days'})
     console.log("Json web token: ", token);
 
     //Lets verify them. Will fail if passed secret do not match

@@ -54,6 +54,16 @@ router.get("/users", auth, async (req, res)=>{
 })
 
 
+// Technically we should return only the same user's details who logged in with 
+// Own creds. The above /users approach where we are exposing entire database is absolute worng in real world.
+// But as learning let keep that endpoint and lets develop new endpoint /users/me to retunr only 
+//logged in user's  details
+
+router.get("/users/me", auth, async (req, res)=>{
+    res.send(req.user);
+})
+
+
 //Get an user by id
 router.get("/users/:id", async (req, res)=>{
     //console.log(req.params); //{id: '12345'}

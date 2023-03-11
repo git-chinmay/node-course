@@ -73,10 +73,7 @@ userSchema.methods.generateAuthToken = async function(){
 
 // Binding our custom find function to user schema
 userSchema.statics.findByCredentials = async (email, password) => {
-    console.log(`email: ${email}, password:${password}`);
-
     const user = await User.findOne({ email })
-
     if (!user){
         throw new Error("Email mismatch. Unable to Login!")
     }
