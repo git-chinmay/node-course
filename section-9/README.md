@@ -7,3 +7,4 @@
 - Generate token while create or sign in 
 - Use token for any other task
 - Express Middleware
+- Logging out mechanism

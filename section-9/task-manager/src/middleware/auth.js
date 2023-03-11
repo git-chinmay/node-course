@@ -19,6 +19,9 @@ const auth = async (req, res, next) => {
             throw new Error();
         }
 
+        //We will need it in logout router to logout a user logged in with specific token
+        req.token = token;
+        
         //We can pass the user data to route handler so that it does not have do it again
         req.user = user
 

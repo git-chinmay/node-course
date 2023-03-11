@@ -40,6 +40,37 @@ router.post("/users/login", async (req, res)=>{
 })
 
 
+
+//Logging out an user
+router.post("/users/logout", auth, async (req, res)=>{
+    try{
+        // In database each user has a list called tokens(we access it via req.tokens.token)
+        // Each time we login a new token get added to the tokens list.
+        // Removing the current logged in token from the list
+        req.user.tokens = req.user.tokens.filter((tk)=>{
+            return tk.token !== req.token; // This req.token is from postman user sent for logout
+        })
+        
+        //saving the filtered token list to database
+        await req.user.save();
+        res.send("Logged Out!");
+    }catch(e){
+        res.status(500).send(e);
+    }
+})
+
+
+//Logout all tokens
+router.post("/users/logoutall", auth, async (req, res)=>{
+    try{
+        req.user.tokens = [];
+        await req.user.save();
+        res.send("All tokens cleanedup!");
+    }catch (e){
+        res.status(500).send(e);
+    }
+})
+
 /*Get all user details (will add mw function 'auth' as 2nd argument so that 
 route handle needs auth token to process the request.). Simple right. Just add a 2nd argument.
 */
