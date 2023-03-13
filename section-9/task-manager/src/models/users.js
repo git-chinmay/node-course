@@ -59,6 +59,14 @@ const userSchema = new mongoose.Schema({
 })
 
 
+/*Adding virtual reference for mongoose use. Its like adding User model to task's owner field
+ But here we are not storing it in database*/
+userSchema.virtual('tasks', {
+    ref: 'Tasks',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 //Adding a new method to schema whcih will be used to hide some user data
 
 /*

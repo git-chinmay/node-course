@@ -1,5 +1,6 @@
 const express = require('express');
 const tasks = require("../models/tasks")
+const auth = require("../middleware/auth")
 const router = new express.Router();
 
 // Get all tasks
@@ -30,10 +31,29 @@ router.get("/tasks/:id", async (req, res)=>{
 })
 
 
-// Create a task
-router.post("/tasks", async (req, res) =>{
+//// Create a task ////
+
+// router.post("/tasks", async (req, res) =>{
+//     console.log(req.body);
+//     const task = new tasks.Tasks(req.body);
+//     try{
+//         await task.save()
+//         res.status(201).send(task);
+//     }catch(error){
+//         res.status(400).send(error);
+//     }
+// })
+
+
+/* Rewriting the above task with auth and attaching it to user id as owner.*/
+router.post("/tasks", auth, async (req, res) =>{
     console.log(req.body);
-    const task = new tasks.Tasks(req.body);
+    
+    const task = new tasks.Tasks({
+        ...req.body,
+        owner: req.user._id
+    });
+
     try{
         await task.save()
         res.status(201).send(task);
@@ -41,6 +61,7 @@ router.post("/tasks", async (req, res) =>{
         res.status(400).send(error);
     }
 })
+
 
 // Update a task
 

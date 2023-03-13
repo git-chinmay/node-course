@@ -12,20 +12,15 @@ const taskSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: 'User' //referencing User model
     }
 
 });
-
-// Adding middleware check before event
-taskSchema.pre("save", async function(next){
-    console.log("before the task!");
-    // const taskObject = this;
-    // if (taskObject.isModified){
-    //     taskObject.completed = await bcrypt.hash(taskObject.completed, 8);
-    // }
-    
-    next()
-})
 
 const Tasks = mongoose.model('Tasks', taskSchema);
 

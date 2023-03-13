@@ -48,3 +48,22 @@ app.use(taskRouter);
 app.listen(port, ()=>{
     console.log(`Server listining on port ${port}`);
 })
+
+
+// Playground code to test. It will not run separately hence using it//
+
+const userModel = require('../src/models/users')
+const taskModel = require('../src/models/tasks')
+
+//Finding user details assocaited with a task
+const main = async () => {
+    // const task = await taskModel.Tasks.findById('640ec2762924f51f008a50a6');
+    // await task.populate('owner').execPopulate()
+    // console.log(task.owner)
+
+    const user = await userModel.User.findById('640ec08dcddb5e1f004bc9bc')
+    await user.populate('tasks').execPopulate()
+    console.log(user.tasks);
+}
+
+main()
