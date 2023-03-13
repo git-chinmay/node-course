@@ -59,6 +59,26 @@ const userSchema = new mongoose.Schema({
 })
 
 
+//Adding a new method to schema whcih will be used to hide some user data
+
+/*
+By replacing the binding method getProfileData with just toJSON
+we dont need to make any changes at user router. Otherwise in router we have to call req.user.getProfileData
+in place of req.user at each endpoint where we want to hide the data
+*/
+
+// userSchema.methods.getProfileData = function(){
+   userSchema.methods.toJSON = function(){
+    const user = this;
+    const userObject = user.toObject();
+
+    // Remove from object what we dont want to send back
+    delete userObject.password;
+    delete userObject.tokens;
+
+    return userObject;
+}
+
 // instance methods are accessible on instances(called instance methods)
 //statics methonds are accessible on on model (called model methods)
 userSchema.methods.generateAuthToken = async function(){

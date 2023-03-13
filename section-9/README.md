@@ -8,3 +8,4 @@
 - Use token for any other task
 - Express Middleware
 - Logging out mechanism
+- Hiding the private data like password

@@ -13,7 +13,9 @@ const users = require("../models/users")
 const auth = require("../middleware/auth")
 const router = new express.Router();
 
-// Creat an user
+
+///// Creat an user ////
+
 router.post("/users", async (req, res) => {
     console.log(req.body);
     const user = new users.User(req.body);
@@ -26,13 +28,21 @@ router.post("/users", async (req, res) => {
     }
 })
 
-// Login an user
+
+//// Login an user ////
+
 router.post("/users/login", async (req, res)=>{
     try{
         //Our custom find & generate token functions
         const user = await users.User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.send({user, token});
+
+        //To hide some user details like password and token
+        //No changes needed if we use toJSON in userSchema
+        res.send({user, token}); 
+
+        // When we use getProfileData as a custom method in userSchema to hide the details
+        //res.send({'user': user.getProfileData(), token})
     }catch(e){
         console.log(e);
         res.status(400).send("Login Error!")
@@ -41,7 +51,8 @@ router.post("/users/login", async (req, res)=>{
 
 
 
-//Logging out an user
+///// Logging out an user ////
+
 router.post("/users/logout", auth, async (req, res)=>{
     try{
         // In database each user has a list called tokens(we access it via req.tokens.token)
@@ -60,7 +71,8 @@ router.post("/users/logout", auth, async (req, res)=>{
 })
 
 
-//Logout all tokens
+///// Logout all tokens ////
+
 router.post("/users/logoutall", auth, async (req, res)=>{
     try{
         req.user.tokens = [];
@@ -71,8 +83,11 @@ router.post("/users/logoutall", auth, async (req, res)=>{
     }
 })
 
-/*Get all user details (will add mw function 'auth' as 2nd argument so that 
-route handle needs auth token to process the request.). Simple right. Just add a 2nd argument.
+
+//// Get all user details ////
+
+/* will add mw function 'auth' as 2nd argument so that 
+route handle needs auth token to process the request. Simple right. Just add a 2nd argument.
 */
 router.get("/users", auth, async (req, res)=>{
 
@@ -85,17 +100,22 @@ router.get("/users", auth, async (req, res)=>{
 })
 
 
-// Technically we should return only the same user's details who logged in with 
-// Own creds. The above /users approach where we are exposing entire database is absolute worng in real world.
-// But as learning let keep that endpoint and lets develop new endpoint /users/me to retunr only 
-//logged in user's  details
+
+//// Get only logged in user profile ////
+
+/* Technically we should return only the same user's details who logged in with 
+    Own creds. The above /users approach where we are exposing entire database is absolute worng in real world.
+    But as learning let keep that endpoint and lets develop new endpoint /users/me to retunr only 
+    logged in user's  details 
+*/
 
 router.get("/users/me", auth, async (req, res)=>{
     res.send(req.user);
 })
 
 
-//Get an user by id
+///// Get an user by id /////
+
 router.get("/users/:id", async (req, res)=>{
     //console.log(req.params); //{id: '12345'}
     const _id = req.params.id;
@@ -116,7 +136,8 @@ router.get("/users/:id", async (req, res)=>{
 })
 
 
-//Update an user
+///// Update an user ////
+
 //new: tru = create a new user before update
 //runValidators - runs the validator
 // These two are optiona params to findByIdANdUpdate
@@ -159,7 +180,8 @@ router.patch("/users/:id", async (req, res) =>{
 })
 
 
-// Delete an user by id
+//// Delete an user by id ////
+
 router.delete("/users/:id", async (req, res) => {
 
     try{
