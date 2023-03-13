@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const taskModel = require('./tasks');
 
 /* When we passed the object mongoose model in behind Node convert it to schema.
 Here we are explicitly converted it into schema so that we can use middleware feature on it.
@@ -128,6 +129,13 @@ userSchema.pre('save', async function(next){
     }
     next();
 });
+
+// Remove tasks if user deleted
+userSchema.pre('remove', async function(next){
+    const user = this;
+    await taskModel.Tasks.deleteMany({ owner:user._id })
+    next();
+})
 
 const User = mongoose.model('User', userSchema);
 
