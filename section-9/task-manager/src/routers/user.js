@@ -116,6 +116,9 @@ router.get("/users/me", auth, async (req, res)=>{
 
 ///// Get an user by id /////
 
+/* Actually we dont need this endpoint as we have /users/me because we should not allow others to see
+someone else details using the id
+*/
 router.get("/users/:id", async (req, res)=>{
     //console.log(req.params); //{id: '12345'}
     const _id = req.params.id;
@@ -141,9 +144,51 @@ router.get("/users/:id", async (req, res)=>{
 //new: tru = create a new user before update
 //runValidators - runs the validator
 // These two are optiona params to findByIdANdUpdate
-router.patch("/users/:id", async (req, res) =>{
+// router.patch("/users/:id", async (req, res) =>{
 
-    const updates = Object.keys(req.body); //fileds sent by client
+//     const updates = Object.keys(req.body); //fileds sent by client
+//     const allowedUpdates = ["name", "age", "email", "password"]
+//     const isValid = updates.every((update) => {
+//         return allowedUpdates.includes(update);
+//     })
+
+//     if(!isValid){
+//         return res.status(400).send("Error: Invalid update.")
+//     }
+
+//     try{
+//         // const userx = await users.User.findByIdAndUpdate(req.params.id, 
+//         //                                                  req.body, {new: true, runValidators: true});
+
+//         /* During patch node byapsses the mongoose middleware, it directly updates the table so we need to
+//         modify our update code to use mongodb opeation so that we can use middleware operations */
+
+//         const findUser = await users.User.findById(req.params.id);
+//         updates.forEach((update)=>{
+//             findUser[update] = req.body[update];
+//         })
+
+//         //Executing the middleware
+//         await findUser.save()
+                
+//         if(!findUser){
+//             return res.status(404).send("No user found");
+//         }
+//         res.send(findUser);
+//     }
+//     catch(error){
+//         res.status(400).send(error);
+
+//     }
+// })
+
+
+/*Rewriting the patch function to use /user/me endpoint and 'auth' bcz we want only authenticated user should able
+to update the own profile and we dont want to use /:id anymore.
+*/
+router.patch("/users/me", auth, async (req, res) =>{
+
+    const updates = Object.keys(req.body); //fields sent by the client
     const allowedUpdates = ["name", "age", "email", "password"]
     const isValid = updates.every((update) => {
         return allowedUpdates.includes(update);
@@ -154,24 +199,14 @@ router.patch("/users/:id", async (req, res) =>{
     }
 
     try{
-        // const userx = await users.User.findByIdAndUpdate(req.params.id, 
-        //                                                  req.body, {new: true, runValidators: true});
 
-        /* During patch node byapsses the mongoose middleware, it directly updates the table so we need to
-        modify our update code to use mongodb opeation so that we can use middleware operations */
-
-        const findUser = await users.User.findById(req.params.id);
         updates.forEach((update)=>{
-            findUser[update] = req.body[update];
+            req.user[update] = req.body[update];
         })
 
         //Executing the middleware
-        await findUser.save()
-                
-        if(!findUser){
-            return res.status(404).send("No user found");
-        }
-        res.send(findUser);
+        await req.user.save()
+        res.send(req.user);
     }
     catch(error){
         res.status(400).send(error);
@@ -182,20 +217,31 @@ router.patch("/users/:id", async (req, res) =>{
 
 //// Delete an user by id ////
 
-router.delete("/users/:id", async (req, res) => {
+// router.delete("/users/:id", async (req, res) => {
+
+//     try{
+//         const deleteUser = await users.User.findByIdAndDelete(req.params.id);
+//         if(!deleteUser){
+//             return res.status(404).send("User not found")
+//         }
+//         res.send("Deleted");
+
+//     }catch(error){
+//         res.status(500).send(error);
+//     }
+// })
+
+//We can rewrite the delete user endpoint with more elegant way with authetication
+router.delete("/users/me", auth, async (req, res) => {
 
     try{
-        const deleteUser = await users.User.findByIdAndDelete(req.params.id);
-        if(!deleteUser){
-            return res.status(404).send("User not found")
-        }
-        res.send("Deleted");
+        //this req.user coming from auth function
+        await req.user.remove();
+        res.send(req.user);
 
     }catch(error){
         res.status(500).send(error);
     }
 })
-
-
 
 module.exports = router
