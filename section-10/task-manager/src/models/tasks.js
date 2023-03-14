@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 
+
 const taskSchema = new mongoose.Schema({
     description:{
         type: String,
@@ -20,6 +21,9 @@ const taskSchema = new mongoose.Schema({
         ref: 'User' //referencing User model
     }
 
+},
+{
+    timestamps:true
 });
 
 const Tasks = mongoose.model('Tasks', taskSchema);
