@@ -35,20 +35,31 @@ const router = new express.Router();
 
 //Adding filter to endpoint (/task?completed=true)
 //Adding pagination(/task?limit=10&skip=10)
+//Adding sorting(/task?sortBy=createdAt_asc/createdAt_dsc | createdAt:asc/createdAt:dsc)
+//Ascending = 1, Descending = -1
 router.get("/tasks", auth, async (req, res) => {
     const match = {}
+    const sort = {}
+
     if(req.query.completed){
         //postman will send true/false as a string, we are convertin it into boolean
         match.completed = req.query.completed === 'true' 
     }
+
+    if(req.query.sortBy){
+        const parts = req.query.sortBy.split(":")
+        sort[parts[0]] = parts[1] === "desc" ? -1 : 1
+    }
     try{
         await req.user.populate({
             path:'tasks',
-            match, //match:match
+            match, //match:match //its for filter
             options:{
-                limit:parseInt(req.query.limit),
-                skip:parseInt(req.query.skip)
+                limit:parseInt(req.query.limit), //Its for pagination
+                skip:parseInt(req.query.skip),  // Its for pagination
+                sort //Its for sorting
             }
+
         }).execPopulate()
         res.send(req.user.tasks);
 
