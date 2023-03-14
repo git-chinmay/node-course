@@ -34,6 +34,7 @@ const router = new express.Router();
 
 
 //Adding filter to endpoint (/task?completed=true)
+//Adding pagination(/task?limit=10&skip=10)
 router.get("/tasks", auth, async (req, res) => {
     const match = {}
     if(req.query.completed){
@@ -43,7 +44,11 @@ router.get("/tasks", auth, async (req, res) => {
     try{
         await req.user.populate({
             path:'tasks',
-            match //match:match
+            match, //match:match
+            options:{
+                limit:parseInt(req.query.limit),
+                skip:parseInt(req.query.skip)
+            }
         }).execPopulate()
         res.send(req.user.tasks);
 
