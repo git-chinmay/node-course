@@ -16,14 +16,35 @@ const router = new express.Router();
 
 //We can use either populate or find approach
 
+// router.get("/tasks", auth, async (req, res) => {
+//     try{
+//         //const taskList = await tasks.Tasks.find({owner:req.user._id});
+//         //res.send(taskList);
+
+//         //OR populate approach
+
+//         await req.user.populate('tasks').execPopulate()
+//         res.send(req.user.tasks);
+
+//     }catch (e){
+//         res.status(500).send("Something went wrong!");
+//     }
+
+// })
+
+
+//Adding filter to endpoint (/task?completed=true)
 router.get("/tasks", auth, async (req, res) => {
+    const match = {}
+    if(req.query.completed){
+        //postman will send true/false as a string, we are convertin it into boolean
+        match.completed = req.query.completed === 'true' 
+    }
     try{
-        //const taskList = await tasks.Tasks.find({owner:req.user._id});
-        //res.send(taskList);
-
-        //OR populate approach
-
-        await req.user.populate('tasks').execPopulate()
+        await req.user.populate({
+            path:'tasks',
+            match //match:match
+        }).execPopulate()
         res.send(req.user.tasks);
 
     }catch (e){
@@ -31,7 +52,6 @@ router.get("/tasks", auth, async (req, res) => {
     }
 
 })
-
 
 // Get a task by id (with auth)
 router.get("/tasks/:id", auth, async (req, res)=>{
