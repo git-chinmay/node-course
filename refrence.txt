@@ -1,13 +1,16 @@
 1) to start mongodb in local:
 '(anaconda3)'PS C:\Users\Chinmay\mongodb\bin> .\mongod.exe --dbpath="C:\Users\Chinmay\mongodb-data"
 
-2) Running the dev:
+2) To install all the packages from packages.js 
+--> npm install (run in root folder where packahe.json defined)
+
+3) Running the dev:
 --> npm run dev
 
-3) To install a specific version of module
+4) To install a specific version of module
 --> npm install <modulename>@<version>
 Example: npm install jwstoken@8.4.0
 
-4) To install a module only for dev(devDependecy)
+5) To install a module only for dev(devDependecy)
 --> npm install <modulename> --save-dev
 

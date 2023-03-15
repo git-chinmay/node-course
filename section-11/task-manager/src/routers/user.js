@@ -11,6 +11,7 @@ STEPS TO FOLLOW
 const express = require('express');
 const users = require("../models/users")
 const auth = require("../middleware/auth")
+const multer = require('multer');
 const router = new express.Router();
 
 
@@ -243,5 +244,16 @@ router.delete("/users/me", auth, async (req, res) => {
         res.status(500).send(error);
     }
 })
+
+
+// Uploading the file
+const upload = multer({
+    dest: 'avatar'
+})
+
+router.post("/users/me/avatar", upload.single('avatar'),(req, res) => {
+    res.send("Avatar uploaded.")
+})
+
 
 module.exports = router
