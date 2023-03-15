@@ -46,6 +46,31 @@ app.use(taskRouter);
 //WITH MIDDLEWARE : new request --> do something(pre/post thing) --> run route handler
 
 
+//// PLAYGROUND CODE FOR FILE UPLOAD ////
+const multer = require('multer');
+const upload = multer({
+    dest: 'images',
+    limits:{
+        fileSize: 5000000 //5MB
+    },
+    //Only allowing pdf files
+    fileFilter(req, file, cb){
+        //if(!file.originalname.endsWith('.pdf')){
+        //use regex
+        if(!file.originalname.match(/\.(doc|docx)$/)){
+            cb(new Error('Please upload a word document.!')); // If error
+        }
+        
+        cb(undefined, true); //if no error
+        // cb(undefined, false); //silently reject the upload, usually nobody use it
+    }
+})
+
+app.post("/upload", upload.single('upload'),(req, res) => {
+    res.send("File uploaded.")
+})
+
+
 app.listen(port, ()=>{
     console.log(`Server listining on port ${port}`);
 })
