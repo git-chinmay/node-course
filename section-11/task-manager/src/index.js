@@ -66,10 +66,20 @@ const upload = multer({
     }
 })
 
-app.post("/upload", upload.single('upload'),(req, res) => {
-    res.send("File uploaded.")
-})
+// app.post("/upload", upload.single('upload'),(req, res) => {
+//     res.send("File uploaded.")
+// })
 
+
+/// Overiding default multer error with custom error for
+// clean and undestandable error
+app.post("/upload", upload.single('upload'), (req, res) => {
+         res.send("File uploaded.")
+    }, (error, req, res, next)=>{
+        res.status(400).send({
+            error: error.message
+        })
+    })
 
 app.listen(port, ()=>{
     console.log(`Server listining on port ${port}`);

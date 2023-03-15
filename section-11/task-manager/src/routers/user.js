@@ -260,9 +260,14 @@ const upload = multer({
     }
 })
 
+
+//Callback function to handle the error more neatly(json) as multer error s are crowded(html)
 router.post("/users/me/avatar", upload.single('avatar'),(req, res) => {
     res.send("Avatar uploaded.")
-})
+}, (error, req, res, next)=>{
+    res.status(400).send({
+        error: error.message
+    })})
 
 
 module.exports = router
