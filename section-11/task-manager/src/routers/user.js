@@ -275,6 +275,23 @@ router.post("/users/me/avatar", auth, upload.single('avatar'), async (req, res) 
     })})
 
 
+//Get the avatar of an user by id
+router.get("/users/:id/avatar", async (req, res) => {
+    try{
+        
+        user = await users.User.findById(req.params.id);
+        
+        if(!user || !user.avatar){
+            throw new Error("User or its avatar missing.")
+        }
+
+        //setup the header
+        res.set('Content-Type', 'image/jpg');
+        res.send(user.avatar);
+    }catch(e){
+        res.status(404).send(e)
+    }
+})
 // Delete the avatar
 router.delete("/users/me/avatar", auth, async (req, res) => {
     req.user.avatar = undefined;
