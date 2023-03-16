@@ -13,6 +13,7 @@ const users = require("../models/users")
 const auth = require("../middleware/auth")
 const multer = require('multer');
 const router = new express.Router();
+const sharp = require('sharp'); //for avatr image resizing
 
 
 ///// Creat an user ////
@@ -266,7 +267,13 @@ const upload = multer({
 //Callback function to handle the error more neatly(json) as multer error s are crowded(html)
 //single('avatar')- representing the header key name in postman call
 router.post("/users/me/avatar", auth, upload.single('avatar'), async (req, res) => {
-    req.user.avatar = req.file.buffer //this only works when 'dest' removed from multer
+
+    //req.user.avatar = req.file.buffer //this only works when 'dest' removed from multer
+
+    //we will add some image resiszing
+    const buffer = await sharp(req.file.buffer).resize({width:250, height:250}).png().toBuffer()
+    req.user.avatar = buffer //storing sharp modified image unlike ealier the original file 
+
     await req.user.save();
     res.send("Avatar uploaded.")
 }, (error, req, res, next)=>{

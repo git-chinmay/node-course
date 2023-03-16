@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); //for hashing the plain test password
+const jwt = require('jsonwebtoken'); //for authentication token
 const taskModel = require('./tasks');
+
 
 /* When we passed the object mongoose model in behind Node convert it to schema.
 Here we are explicitly converted it into schema so that we can use middleware feature on it.
@@ -90,7 +91,7 @@ in place of req.user at each endpoint where we want to hide the data
     // Remove from object what we dont want to send back
     delete userObject.password;
     delete userObject.tokens;
-
+    delete userObject.avatar;
     return userObject;
 }
 
