@@ -248,10 +248,12 @@ router.delete("/users/me", auth, async (req, res) => {
 
 // Uploading the file
 const upload = multer({
-    dest: 'avatar',
+    //dest: 'avatar',// remove it otherwise multer always stores in filesystem which we dont want 
+    // bcz it will not work once deployed to AWS/Heroku. We want the image to be openly avlbl for function
     limits:{
         fileSize: 5000000
     },
+    //cb= call back
     fileFilter(req, file, cb){
         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
             cb(new Error("Allowed file format: JPG, JPEG & PNG"))
@@ -262,7 +264,10 @@ const upload = multer({
 
 
 //Callback function to handle the error more neatly(json) as multer error s are crowded(html)
-router.post("/users/me/avatar", upload.single('avatar'),(req, res) => {
+//single('avatar')- representing the header key name in postman call
+router.post("/users/me/avatar", auth, upload.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer //this only works when 'dest' removed from multer
+    await req.user.save();
     res.send("Avatar uploaded.")
 }, (error, req, res, next)=>{
     res.status(400).send({
@@ -270,4 +275,10 @@ router.post("/users/me/avatar", upload.single('avatar'),(req, res) => {
     })})
 
 
+// Delete the avatar
+router.delete("/users/me/avatar", auth, async (req, res) => {
+    req.user.avatar = undefined;
+    await req.user.save()
+    res.send("Avatra Deleted.")
+})
 module.exports = router

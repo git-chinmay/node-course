@@ -56,7 +56,10 @@ const userSchema = new mongoose.Schema({
             required: true
         }
 
-    }]
+    }],
+    avatar:{//storing profile avatar image in database
+        type:Buffer
+    }
 },
 {
     timestamps:true
