@@ -14,7 +14,7 @@ const auth = require("../middleware/auth")
 const multer = require('multer');
 const router = new express.Router();
 const sharp = require('sharp'); //for avatr image resizing
-
+const { sendWelcomeEmail, sendCancelEmail } = require('../emails/account')
 
 ///// Creat an user ////
 
@@ -23,6 +23,7 @@ router.post("/users", async (req, res) => {
     const user = new users.User(req.body);
     try{
         await user.save()
+        sendWelcomeEmail(user.email, user.name);
         const token = await user.generateAuthToken();
         res.status(201).send({user, token});
     }catch (error){
@@ -239,6 +240,7 @@ router.delete("/users/me", auth, async (req, res) => {
     try{
         //this req.user coming from auth function
         await req.user.remove();
+        sendCancelEmail(req.user.email, req.user.name);
         res.send(req.user);
 
     }catch(error){

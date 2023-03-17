@@ -14,3 +14,5 @@ Example: npm install jwstoken@8.4.0
 5) To install a module only for dev(devDependecy)
 --> npm install <modulename> --save-dev
 
+6) Sendgrid send_grid_send_email101
+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
