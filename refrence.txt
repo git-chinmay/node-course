@@ -15,4 +15,8 @@ Example: npm install jwstoken@8.4.0
 --> npm install <modulename> --save-dev
 
 6) Sendgrid send_grid_send_email101
-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
+
+7) Use -f to setup the env-cmd in your package.json
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js"
+Reference link: https://www.declarecode.com/code-solutions/javascript/failed-to-find-env-file-at-default-paths-env-env-js-env-json-failed-to-find-env-file-at-default-paths-env-env-js-env-json-failed-to-find-env-file-at-default
+

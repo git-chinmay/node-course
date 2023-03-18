@@ -6,7 +6,7 @@ const apiMaintenance = require('./middleware/api-maintenance')
 
 
 const app = express();
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 //Here we will use our custom defined function in our application
 //middleware function to block GET calls

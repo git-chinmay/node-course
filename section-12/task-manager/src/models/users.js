@@ -100,7 +100,7 @@ in place of req.user at each endpoint where we want to hide the data
 //statics methonds are accessible on on model (called model methods)
 userSchema.methods.generateAuthToken = async function(){
     const user = this;
-    const token = jwt.sign({ _id:user._id.toString() }, "thisisjsonwebtoken");
+    const token = jwt.sign({ _id:user._id.toString() }, process.env.JWT_SECRET);
     //Save the tokej to database
     user.tokens = user.tokens.concat({ token })
     await user.save();

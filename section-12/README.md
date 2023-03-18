@@ -1,6 +1,7 @@
 ### Sending Email (Task Manager App)
 
 - Exploring sendGrid (email module: https://sendgrid.com/)
-- Environment variables
+- Integrate auto email while an user created or deleted
+- Environment variables(npm module: env-cmd)
 - Creating a production MongoDB database
 - Prepraing for AWS deployment
