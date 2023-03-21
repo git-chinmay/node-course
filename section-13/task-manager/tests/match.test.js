@@ -1,4 +1,4 @@
-const { calculateTip } = require('../playground/math')
+const { calculateTip, farenhitToCelcius, celciusToFarenhit } = require('../playground/math')
 
 test("Hello Jest", ()=>{
 
@@ -20,4 +20,14 @@ test('Should calculate total with expect()', ()=> {
     const total = calculateTip(10, 0.3)
     expect(total).toBe(13);
 
+})
+
+test('Sould convert 32 F to 0 C', ()=>{
+    const temp = farenhitToCelcius(32);
+    expect(temp).toBe(0)
+})
+
+test("Should convert 0 C to 32 F", ()=>{
+    const temp = celciusToFarenhit(0);
+    expect(temp).toBe(32);
 })
