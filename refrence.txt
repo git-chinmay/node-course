@@ -20,3 +20,5 @@ Example: npm install jwstoken@8.4.0
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js"
 Reference link: https://www.declarecode.com/code-solutions/javascript/failed-to-find-env-file-at-default-paths-env-env-js-env-json-failed-to-find-env-file-at-default-paths-env-env-js-env-json-failed-to-find-env-file-at-default
 
+8) To run the test 
+--> npm test 
