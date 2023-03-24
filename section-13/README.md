@@ -5,3 +5,5 @@
 - Express test server using supertest
 - Jest setup and teardown
 - Testing with Authentication
+- Advance assertions
+- Mocking Libraries

@@ -24,19 +24,40 @@ beforeEach(async ()=>{
 
 
 test("Should sign up a new user", async () => {
-    await await request(app).post('/users').send({
+    const response = await request(app).post('/users').send({
         name: "Lance",
         email: "lance@email.com",
         password: "myPass077"
     }).expect(201)
+
+    //Assert that database was changed correctly
+    const dbuser = await user.User.findById(response.body.user._id);
+    expect(dbuser).not.toBeNull()
+
+    //Assertions about the response
+    expect(response.body).toMatchObject({
+        user:{
+            name: "Lance",
+            email: "lance@email.com",
+        },
+        token:dbuser.tokens[0].token
+    })
+
+    //Assertions about the password not stored as plaintext in db
+    expect(dbuser.password).not.toBe("myPass077")
 })
 
 
 test("Should login existing user", async ()=>{
-    await request(app).post("/users/login").send({
+    const response = await request(app).post("/users/login").send({
         email: userOne.email,
         password: userOne.password
     }).expect(200)
+
+    //Assertion that logged in user have same token as 2nd token in db(1token: when user created, 2nd token: when user logged in)
+    //const dbuser = await user.User.findById(response.body.user._id); //It same as below
+    const dbuser = await user.User.findById(userOneObjectId);
+    expect(response.body.token).toBe(dbuser.tokens[1].token)
 })
 
 
@@ -70,6 +91,10 @@ test("Should delete account for user", async ()=>{
             .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
             .send()
             .expect(200)
+
+    //Asserting that user actually deleted from db
+    const userDb = await user.User.findById(userOneObjectId);
+    expect(userDb).toBeNull()
 })
 
 
