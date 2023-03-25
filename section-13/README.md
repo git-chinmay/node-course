@@ -7,3 +7,4 @@
 - Testing with Authentication
 - Advance assertions
 - Mocking Libraries
+- jest Timeout error handelling

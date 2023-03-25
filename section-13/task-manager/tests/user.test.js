@@ -1,27 +1,29 @@
 const request = require('supertest');
 const app = require('../src/app');
-const user = require('../src/models/users')
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+const userModel = require('../src/models/users')
+const {userOneObjectId, userOne, setupDatabase} = require('./fixtures/db')
 
-const userOneObjectId = new mongoose.Types.ObjectId();
-const userOne = {
-    _id: userOneObjectId,
-    name: "Mike",
-    email: "mike@email.com",
-    password: "testPass",
-    tokens:[{
-        token: jwt.sign({_id: userOneObjectId}, process.env.JWT_SECRET)
-    }]
-}
+// We ae gonna store it in a common place so that other test suiets also can access it.
+// const userOneObjectId = new mongoose.Types.ObjectId();
+// const userOne = {
+//     _id: userOneObjectId,
+//     name: "Mike",
+//     email: "mike@email.com",
+//     password: "testPass",
+//     tokens:[{
+//         token: jwt.sign({_id: userOneObjectId}, process.env.JWT_SECRET)
+//     }]
+// }
 
 // We need to wipe out the existing data always before running the tests otherwise it will fail 
 // becaus ethese users were already tere due to previous test run.
-beforeEach(async ()=>{
-    await user.User.deleteMany();
-    await new user.User(userOne).save();
-})
+// beforeEach(async ()=>{
+//     await user.User.deleteMany();
+//     await new user.User(userOne).save();
+// })
 
+//Make it for generic
+beforeEach(setupDatabase)
 
 test("Should sign up a new user", async () => {
     const response = await request(app).post('/users').send({
@@ -31,7 +33,7 @@ test("Should sign up a new user", async () => {
     }).expect(201)
 
     //Assert that database was changed correctly
-    const dbuser = await user.User.findById(response.body.user._id);
+    const dbuser = await userModel.User.findById(response.body.user._id);
     expect(dbuser).not.toBeNull()
 
     //Assertions about the response
@@ -56,7 +58,7 @@ test("Should login existing user", async ()=>{
 
     //Assertion that logged in user have same token as 2nd token in db(1token: when user created, 2nd token: when user logged in)
     //const dbuser = await user.User.findById(response.body.user._id); //It same as below
-    const dbuser = await user.User.findById(userOneObjectId);
+    const dbuser = await userModel.User.findById(userOneObjectId);
     expect(response.body.token).toBe(dbuser.tokens[1].token)
 })
 
@@ -93,7 +95,7 @@ test("Should delete account for user", async ()=>{
             .expect(200)
 
     //Asserting that user actually deleted from db
-    const userDb = await user.User.findById(userOneObjectId);
+    const userDb = await userModel.User.findById(userOneObjectId);
     expect(userDb).toBeNull()
 })
 
@@ -112,11 +114,12 @@ test("Should not delete account for unauthenticated user", async ()=>{
 //             .attach("avatar", "tests/fixture/profile-pic.jpg")
 //             .expect(200)
     
-//     const dbuser1 = user.User.findById(userOneObjectId)
+//     const dbuser1 = userModel.User.findById(userOneObjectId)
 //     //expect({}).toBe({}) // not equal as toBe uses === in backend which always throw not equal for objects(2 objects have different memory locations)
 //     //expect({}).toEqual({}) //It will be equal as it uses some algorithm for comparison
 //     expect(dbuser1.avatar).toEqual(expect.any(Buffer));
 // })
+
 
 test("Should update valid user field", async () => {
     await request(app)
@@ -124,7 +127,7 @@ test("Should update valid user field", async () => {
             .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
             .send({"name":"cicada"})
             .expect(200)
-    const dbuser = await user.User.findById(userOneObjectId);
+    const dbuser = await userModel.User.findById(userOneObjectId);
     expect(dbuser.name).toBe('cicada')
 
 })

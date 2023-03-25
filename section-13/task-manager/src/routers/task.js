@@ -102,7 +102,7 @@ router.get("/tasks/:id", auth, async (req, res)=>{
 
 /* Rewriting the above task with auth and attaching it to user id as owner.*/
 router.post("/tasks", auth, async (req, res) =>{
-    console.log(req.body);
+    //console.log(req.body);
 
     const task = new tasks.Tasks({
         ...req.body,
