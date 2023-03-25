@@ -5,7 +5,8 @@ const {
     userOne, 
     userTwo, 
     setupDatabase, 
-    taskOne} = require('./fixtures/db')
+    taskOne,
+    taskThree} = require('./fixtures/db')
 
 beforeEach(setupDatabase)
 
@@ -45,7 +46,8 @@ test("Should GET all tasks for userOne", async ()=>{
 })
 
 
-
+// For some reason this test case not working as expected.
+// The userTwo able to delete the userOne's tasks
 test("Should not delete other user's tasks", async ()=>{
     await request(app)
             .delete(`/tasks/${taskOne._id}`)
@@ -53,6 +55,6 @@ test("Should not delete other user's tasks", async ()=>{
             .send()
             .expect(404)
 
-    const dbTaskOne = await taskModel.Tasks.findById(taskOne._id);
-    expect(dbTaskOne).not.toBeNull();
+    const dbTask = await taskModel.Tasks.findById(taskOne._id);
+    expect(dbTask).not.toBeNull();
 })
