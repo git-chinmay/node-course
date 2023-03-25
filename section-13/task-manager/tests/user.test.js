@@ -105,6 +105,41 @@ test("Should not delete account for unauthenticated user", async ()=>{
             .expect(401)
 })
 
+// test("Should upload avatar images", async ()=> {
+//     await request(app)
+//             .post("/users/me/avatar")
+//             .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+//             .attach("avatar", "tests/fixture/profile-pic.jpg")
+//             .expect(200)
+    
+//     const dbuser1 = user.User.findById(userOneObjectId)
+//     //expect({}).toBe({}) // not equal as toBe uses === in backend which always throw not equal for objects(2 objects have different memory locations)
+//     //expect({}).toEqual({}) //It will be equal as it uses some algorithm for comparison
+//     expect(dbuser1.avatar).toEqual(expect.any(Buffer));
+// })
+
+test("Should update valid user field", async () => {
+    await request(app)
+            .patch("/users/me")
+            .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+            .send({"name":"cicada"})
+            .expect(200)
+    const dbuser = await user.User.findById(userOneObjectId);
+    expect(dbuser.name).toBe('cicada')
+
+})
+
+
+test("Should not update invalid user field", async () => {
+    await request(app)
+            .patch("/users/me")
+            .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+            .send({"gender":"foo"})
+            .expect(400)
+
+})
+
+
 //For our case we dont need the aftereach
 // afterEach(()=>{
 //     console.log("After each..")

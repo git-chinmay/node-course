@@ -6,14 +6,14 @@ const auth = async (req, res, next) => {
     try{
         // Extract the token sent by the user as header
         const token = req.header('Authorization').replace("Bearer ", '')
-        console.log("Token from postman", token);
+        // console.log("Token from postman", token);
 
         // Validating the incoming token
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
         // Find an existing user with given id which has the same incoming token
         const user = await users.User.findOne({ '_id': decoded._id, 'tokens.token': token}) 
-        console.log("user", user)
+        // console.log("user", user)
 
         if(!user){
             throw new Error();

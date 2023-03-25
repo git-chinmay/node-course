@@ -130,7 +130,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
 //We need middleware before the event(create user)- Hashing the password
 userSchema.pre('save', async function(next){
     const user = this;
-    console.log("Just before saving!");
     // Hash the password if its not or new password provided as prt of PATCH
     if(user.isModified){
         user.password = await bcrypt.hash(user.password, 8); //8 recomonded value
