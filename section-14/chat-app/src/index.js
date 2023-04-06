@@ -37,17 +37,30 @@ let count = 0;
 io.on("connection", (socket)=>{
     console.log("New socket.io connection.")
 
-    //sendig an event from server(index.js) to client(chat.js)
-    //This event could be anything x,y,z
-    socket.emit("countUpdated", count) // Here we r not using io.emit() bcz we dont want to send the count to all conenctions
+    // Playground for socket.io emit and listen
+    // //sendig an event from server(index.js) to client(chat.js)
+    // //This event could be anything x,y,z
+    // socket.emit("countUpdated", count) // Here we r not using io.emit() bcz we dont want to send the count to all conenctions
 
-    //Listen the venet sent by client chat.js
-    socket.on('incremented', ()=>{
-        count++ ;
-        //socket.emit("countUpdated", count) 
-        //socket.emit emits only to one conenction at a time hence if 3 connctons ar there other two will not get same response from erver
+    // //Listen the event sent by client chat.js
+    // socket.on('incremented', ()=>{
+    //     count++ ;
+    //     //socket.emit("countUpdated", count) 
+    //     //socket.emit emits only to one conenction at a time hence if 3 connctons ar there other two will not get same response from erver
 
-        io.emit('countUpdated', count)
+    //     io.emit('countUpdated', count)
+    //})
+
+
+    // CODE CHALLENEG //
+    // Server will send welcome message to new user
+    socket.emit("message", "Server: Welcome to you user!");
+
+    // Server lisening the client data
+    socket.on("sendMessage", (inputTextReceived)=>{
+        //console.log(`Serverside: Client send data: ${inputTextReceived}`);
+        //Server will relying the message to all connected users
+        io.emit("message", inputTextReceived)
     })
 })
 
