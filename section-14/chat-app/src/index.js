@@ -55,6 +55,17 @@ io.on("connection", (socket)=>{
     // CODE CHALLENEG //
     // Server will send welcome message to new user
     socket.emit("message", "Server: Welcome to you user!");
+    //Broad case message to all user except the user who just joined.
+    socket.broadcast.emit("message","A new user has joined.");
+
+    //Broadcast when an user left
+    // NOTE: io.on is only for connection, for disconnetion we need to use socket
+    socket.on('disconnect', ()=>{
+        //socket.broadcast.emit("message", "A user has left.")
+        //socket broadcast will also works but as user already left so no harm in using io.emit
+        io.emit("message", "A user has left.")
+        
+    })
 
     // Server lisening the client data
     socket.on("sendMessage", (inputTextReceived)=>{
