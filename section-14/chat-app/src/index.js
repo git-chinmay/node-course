@@ -73,6 +73,11 @@ io.on("connection", (socket)=>{
         //Server will relying the message to all connected users
         io.emit("message", inputTextReceived)
     })
+
+    //Server listenng the location data
+    socket.on("sendLocation", (locationData)=>{
+        io.emit("message", `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`)
+    })
 })
 
 server.listen(port, () => {

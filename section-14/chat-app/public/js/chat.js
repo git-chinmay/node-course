@@ -45,3 +45,25 @@ getData.addEventListener('submit', (e)=>{
     //Send the event to server(index.js)
     socket.emit("sendMessage", `User: ${inputText}`);
 })
+
+//sharing geolocation
+//https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
+document.querySelector('#send-location').addEventListener('click', ()=>{
+    if(!navigator.geolocation){
+        return alert('Your browser do not support this.');
+    }
+
+    //getCurrentPosition do not support promise-async yet so we will use standard callback
+    navigator.geolocation.getCurrentPosition((position)=>{
+        console.log(position);
+        const locationData = {
+            latitude: position.coords.latitude, 
+            longitude: position.coords.longitude
+        }
+        //send the location to server
+        socket.emit("sendLocation", locationData);
+    })
+
+
+
+})
