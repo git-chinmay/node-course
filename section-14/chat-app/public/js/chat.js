@@ -43,8 +43,18 @@ getData.addEventListener('submit', (e)=>{
     const inputText = e.target.elements.message.value;
 
     //Send the event to server(index.js)
-    socket.emit("sendMessage", `User: ${inputText}`);
+    //socket.emit("sendMessage", `User: ${inputText}`);
+
+    //User can also send message and expect an acknowledgement from server
+    // Here user sending the 'event', 'the text' and a callback func 
+    socket.emit("sendMessage", `User: ${inputText}`, (error)=>{
+        if(error){
+            return console.log("Error in message delivery.", error)
+        }
+        console.log("Message delivered.")}
+    )
 })
+
 
 //sharing geolocation
 //https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
@@ -61,7 +71,12 @@ document.querySelector('#send-location').addEventListener('click', ()=>{
             longitude: position.coords.longitude
         }
         //send the location to server
-        socket.emit("sendLocation", locationData);
+        socket.emit("sendLocation", locationData, (error)=>{
+            if (error){
+                console.log(error);
+            }
+            console.log("Location shared.")
+        });
     })
 
 

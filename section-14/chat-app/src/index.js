@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
+const Filter = require('bad-words');
 
 const pathToPublicDirectory = path.join(__dirname, "../public")
 const app = express();
@@ -68,15 +69,34 @@ io.on("connection", (socket)=>{
     })
 
     // Server lisening the client data
-    socket.on("sendMessage", (inputTextReceived)=>{
-        //console.log(`Serverside: Client send data: ${inputTextReceived}`);
-        //Server will relying the message to all connected users
-        io.emit("message", inputTextReceived)
-    })
+    // socket.on("sendMessage", (inputTextReceived)=>{
+    //     //console.log(`Serverside: Client send data: ${inputTextReceived}`);
+    //     //Server will relying the message to all connected users
+    //     io.emit("message", inputTextReceived)
+    // })
+
+    // As user senidg a callback in epetation of an acknowledgemnt we can rewite above code
+    socket.on('sendMessage', (inputTextReceived, callback) => {
+
+        // Check for profanity in user text
+        const filter = new Filter();
+        if(filter.isProfane(inputTextReceived)){
+            return callback("Profanity not allowed in text messages.")
+        
+        }
+
+        io.emit("message", inputTextReceived);
+        callback(); //just executing the callback send by user
+    } )
 
     //Server listenng the location data
-    socket.on("sendLocation", (locationData)=>{
+    socket.on("sendLocation", (locationData, callback)=>{
+        if(!locationData){
+            return callback("No location data received from user.")
+        }
+
         io.emit("message", `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`)
+        callback();
     })
 })
 
