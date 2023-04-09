@@ -33,12 +33,23 @@ socket.on("message", (greeting_text)=>{
 //             socket.emit("sendMessage", inputText);
 //         })
 
-const getData = document.querySelector('#form-id-1');
+
+
+/// ELEMENTS ///
+
+const messageForm = document.querySelector('#form-id-1');
+const messageInputForm = messageForm.querySelector('input');
+const messageButtonForm = messageForm.querySelector('button');
 //const inputData = document.querySelector('input'); //This one fine if only 1 input filed inside form
+const sendLocationBtn = document.querySelector('#send-location');
 
 
-getData.addEventListener('submit', (e)=>{
+messageForm.addEventListener('submit', (e)=>{
     e.preventDefault(); //To stop refreshing the browser
+
+    //Disabling the submit button untill message sent
+    messageButtonForm.setAttribute('disabled', 'disabled');
+
     //const inputText = inputData.value;
     const inputText = e.target.elements.message.value;
 
@@ -48,6 +59,14 @@ getData.addEventListener('submit', (e)=>{
     //User can also send message and expect an acknowledgement from server
     // Here user sending the 'event', 'the text' and a callback func 
     socket.emit("sendMessage", `User: ${inputText}`, (error)=>{
+
+        //Enabling the button
+        messageButtonForm.removeAttribute('disabled');
+
+        //Clear the input field & set cursor focus to it
+        messageInputForm.value = '';
+        messageInputForm.focus();
+
         if(error){
             return console.log("Error in message delivery.", error)
         }
@@ -56,12 +75,16 @@ getData.addEventListener('submit', (e)=>{
 })
 
 
-//sharing geolocation
+/// Sharing geolocation ///
 //https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
-document.querySelector('#send-location').addEventListener('click', ()=>{
+
+sendLocationBtn.addEventListener('click', ()=>{
     if(!navigator.geolocation){
         return alert('Your browser do not support this.');
     }
+
+    //Disabling the button
+    sendLocationBtn.setAttribute('disabled', 'disabled');
 
     //getCurrentPosition do not support promise-async yet so we will use standard callback
     navigator.geolocation.getCurrentPosition((position)=>{
@@ -72,13 +95,17 @@ document.querySelector('#send-location').addEventListener('click', ()=>{
         }
         //send the location to server
         socket.emit("sendLocation", locationData, (error)=>{
+        
+            //Enabling the send button
+            sendLocationBtn.removeAttribute('disabled');
+
             if (error){
                 console.log(error);
             }
+            
             console.log("Location shared.")
         });
     })
-
 
 
 })
