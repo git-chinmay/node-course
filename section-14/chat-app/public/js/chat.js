@@ -1,4 +1,4 @@
-// This is client and index.js is our server
+// This is client and index.js is our server //
 
 const socket = io() //This is working because we have added /socket.io inside html file
 
@@ -17,10 +17,48 @@ const socket = io() //This is working because we have added /socket.io inside ht
 //     socket.emit('incremented')
 // })
 
+
+/// ELEMENTS ///
+
+const messageForm = document.querySelector('#form-id-1');
+const messageInputForm = messageForm.querySelector('input');
+const messageButtonForm = messageForm.querySelector('button');
+//const inputData = document.querySelector('input'); //This one fine if only 1 input filed inside form
+const sendLocationBtn = document.querySelector('#send-location');
+const messages = document.querySelector('#messages');
+
+
+// TEMPLATES
+const messageTemplate = document.querySelector('#message-template').innerHTML
+const geolocTemplate = document.querySelector('#geoloc-template').innerHTML
+const lcnHprlnkTemplate = document.querySelector('#location-hyperlink').innerHTML;
+
 // CODE CHALLENGE //
 socket.on("message", (greeting_text)=>{
     console.log(greeting_text)
+    const html = Mustache.render(messageTemplate, {
+        msg: greeting_text
+    });
+    messages.insertAdjacentHTML('beforeend', html); //insert new htmls bottom of the div
 })
+
+
+socket.on("locationMessage", (url)=>{
+    console.log(url);
+    const html = Mustache.render(lcnHprlnkTemplate, {
+        url
+    });
+    messages.insertAdjacentHTML('beforeend', html);
+})
+
+
+// socket.on("message", (url)=>{
+//     console.log(url)
+//     const html = Mustache.render(geolocTemplate, {
+//         loc: url
+//     });
+//     messages.insertAdjacentHTML('beforeend', html);
+// })
 
 //Listening the data from input field
 // document.querySelector('form').addEventListener('submit', (e)=>{
@@ -35,15 +73,7 @@ socket.on("message", (greeting_text)=>{
 
 
 
-/// ELEMENTS ///
-
-const messageForm = document.querySelector('#form-id-1');
-const messageInputForm = messageForm.querySelector('input');
-const messageButtonForm = messageForm.querySelector('button');
-//const inputData = document.querySelector('input'); //This one fine if only 1 input filed inside form
-const sendLocationBtn = document.querySelector('#send-location');
-
-
+// Sharing messages between server & client
 messageForm.addEventListener('submit', (e)=>{
     e.preventDefault(); //To stop refreshing the browser
 
@@ -102,10 +132,11 @@ sendLocationBtn.addEventListener('click', ()=>{
             if (error){
                 console.log(error);
             }
-            
+
             console.log("Location shared.")
         });
     })
 
 
 })
+

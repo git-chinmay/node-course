@@ -95,9 +95,15 @@ io.on("connection", (socket)=>{
             return callback("No location data received from user.")
         }
 
-        io.emit("message", `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`)
+        // io.emit("message", `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`)
+        // callback();
+
+        //Server emits the locations url
+        io.emit("locationMessage", `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`)
         callback();
     })
+
+
 })
 
 server.listen(port, () => {
