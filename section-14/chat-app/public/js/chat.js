@@ -34,10 +34,12 @@ const geolocTemplate = document.querySelector('#geoloc-template').innerHTML
 const lcnHprlnkTemplate = document.querySelector('#location-hyperlink').innerHTML;
 
 // CODE CHALLENGE //
-socket.on("message", (greeting_text)=>{
-    console.log(greeting_text)
+//We have defined the Mustach & moment in index.html
+socket.on("message", (msg)=>{
+    console.log(msg)
     const html = Mustache.render(messageTemplate, {
-        msg: greeting_text
+        msg: msg.text,
+        createdAt: moment(msg.createdAt).format('hh:mm a') //https://momentjs.com/
     });
     messages.insertAdjacentHTML('beforeend', html); //insert new htmls bottom of the div
 })

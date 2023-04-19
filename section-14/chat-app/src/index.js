@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
+const {generateMessage} = require('./utils/messages');
 
 const pathToPublicDirectory = path.join(__dirname, "../public")
 const app = express();
@@ -55,16 +56,18 @@ io.on("connection", (socket)=>{
 
     // CODE CHALLENEG //
     // Server will send welcome message to new user
-    socket.emit("message", "Server: Welcome to you user!");
+    socket.emit("message", generateMessage("Server: Welcome to you user!"));
+
+
     //Broad case message to all user except the user who just joined.
-    socket.broadcast.emit("message","A new user has joined.");
+    socket.broadcast.emit("message", generateMessage("A new user has joined."));
 
     //Broadcast when an user left
     // NOTE: io.on is only for connection, for disconnetion we need to use socket
     socket.on('disconnect', ()=>{
         //socket.broadcast.emit("message", "A user has left.")
         //socket broadcast will also works but as user already left so no harm in using io.emit
-        io.emit("message", "A user has left.")
+        io.emit("message", generateMessage("A user has left."));
         
     })
 
@@ -85,7 +88,7 @@ io.on("connection", (socket)=>{
         
         }
 
-        io.emit("message", inputTextReceived);
+        io.emit("message", generateMessage(inputTextReceived));
         callback(); //just executing the callback send by user
     } )
 

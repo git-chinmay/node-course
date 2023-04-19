@@ -5,23 +5,19 @@
 
         <div id="messages"></div>
         <body>
-            <h1>Hello There!</h1>
+            <h1>ChatApp</h1>
             <button id="increment">+1</button>
-
-            <div>
-                <p>Enter the text in text bar.</p>
-                <form id="form-id-1">
-                    <input name="message" placeholder="text">
-                    <button>Submit</button>
-                    
-                </form>
-                <button id="send-location">Send location</button>
-            </div>
-
+            <p>Enter the text in text bar.</p>
+            <form id="form-id-1">
+                <input name="message" placeholder="text">
+                <button>Submit</button>  
+            </form>
+            
+            <button id="send-location">Send location</button>
 
             <script id="message-template" type="text/html">
                 <div>
-                    <p>{{msg}}</p>
+                    <p>{{createdAt}} - {{msg}}</p>
                 </div>
             </script>
 
