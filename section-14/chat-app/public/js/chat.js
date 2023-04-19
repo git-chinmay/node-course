@@ -45,10 +45,11 @@ socket.on("message", (msg)=>{
 })
 
 
-socket.on("locationMessage", (url)=>{
-    console.log(url);
+socket.on("locationMessage", (locationData)=>{
+    console.log(locationData);
     const html = Mustache.render(lcnHprlnkTemplate, {
-        url
+        url: locationData.url,
+        createdAt: moment(locationData.createdAt).format('hh:mm a')
     });
     messages.insertAdjacentHTML('beforeend', html);
 })
@@ -123,7 +124,8 @@ sendLocationBtn.addEventListener('click', ()=>{
         console.log(position);
         const locationData = {
             latitude: position.coords.latitude, 
-            longitude: position.coords.longitude
+            longitude: position.coords.longitude,
+            timeStamp: position.timestamp
         }
         //send the location to server
         socket.emit("sendLocation", locationData, (error)=>{
