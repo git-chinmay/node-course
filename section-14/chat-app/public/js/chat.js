@@ -33,6 +33,14 @@ const messageTemplate = document.querySelector('#message-template').innerHTML
 const geolocTemplate = document.querySelector('#geoloc-template').innerHTML
 const lcnHprlnkTemplate = document.querySelector('#location-hyperlink').innerHTML;
 
+
+//OPTIONS
+// It will parse the query string from join page so that (http://localhost:3000/chat.html?username=Julia&room=room1)
+// we can extract username and room details and send it to chat.html
+//Qs is coming from the cha.html qs.min.js
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
+
+
 // CODE CHALLENGE //
 //We have defined the Mustach & moment in index.html
 socket.on("message", (msg)=>{
@@ -143,4 +151,8 @@ sendLocationBtn.addEventListener('click', ()=>{
 
 
 })
+
+
+// Sending the usrname and room details to server(extracted from join page)
+socket.emit('join', {username, room});
 

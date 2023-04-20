@@ -54,13 +54,15 @@ io.on("connection", (socket)=>{
     //})
 
 
-    // CODE CHALLENEG //
+    // CODE CHALLENEG // 
+    // Commenting this as we are gonne use it inside room
     // Server will send welcome message to new user
-    socket.emit("message", generateMessage("Server: Welcome to you user!"));
+    //socket.emit("message", generateMessage("Server: Welcome to you user!"));
 
 
     //Broad case message to all user except the user who just joined.
-    socket.broadcast.emit("message", generateMessage("A new user has joined."));
+    //MOving this to join room
+    //socket.broadcast.emit("message", generateMessage("A new user has joined."));
 
     //Broadcast when an user left
     // NOTE: io.on is only for connection, for disconnetion we need to use socket
@@ -78,6 +80,26 @@ io.on("connection", (socket)=>{
     //     io.emit("message", inputTextReceived)
     // })
 
+
+    //Receiving the username and room name of join page from client
+    socket.on('join', ({username, room}) => {
+        //socket.join onl be used at server side
+        socket.join(room)
+
+        //socket.emit(specfic client)
+        //io.emit(To all connected client)
+        //socket.broadcast.emit(To all connected clients except the current one)
+        //io.to.emit (Emit an event to everybody inside a room)
+        //socket.broadcast.to().emit (Emit an event to all connected user except current one inside a room)
+
+        // Server will send welcome message to new user
+        socket.emit("message", generateMessage("Welcome!"));
+        socket.broadcast.to(room).emit("message", generateMessage(`${username} has joined the ${room} room.`));
+
+
+
+    })
+
     // As user senidg a callback in epetation of an acknowledgemnt we can rewite above code
     socket.on('sendMessage', (inputTextReceived, callback) => {
 
@@ -88,7 +110,8 @@ io.on("connection", (socket)=>{
         
         }
 
-        io.emit("message", generateMessage(inputTextReceived));
+        //for nowhardcoded the room name 
+        io.to('hot').emit("message", generateMessage(inputTextReceived));
         callback(); //just executing the callback send by user
     } )
 
