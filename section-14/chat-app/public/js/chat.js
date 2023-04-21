@@ -99,7 +99,7 @@ messageForm.addEventListener('submit', (e)=>{
 
     //User can also send message and expect an acknowledgement from server
     // Here user sending the 'event', 'the text' and a callback func 
-    socket.emit("sendMessage", `User: ${inputText}`, (error)=>{
+    socket.emit("sendMessage", inputText, (error)=>{
 
         //Enabling the button
         messageButtonForm.removeAttribute('disabled');
