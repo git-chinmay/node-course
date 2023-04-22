@@ -154,5 +154,27 @@ sendLocationBtn.addEventListener('click', ()=>{
 
 
 // Sending the usrname and room details to server(extracted from join page)
-socket.emit('join', {username, room});
+socket.emit('join', {username, room}, (error)=>{
+    if(error){
+        alert(error);
+        //Redirect the user to home page in case of error
+        location.href = '/' //Redirecting to JOIN page
+    }
+});
+
+/*
+Location global varibale
+{
+    "ancestorOrigins": {},
+    "href": "http://localhost:3000/",
+    "origin": "http://localhost:3000",
+    "protocol": "http:",
+    "host": "localhost:3000",
+    "hostname": "localhost",
+    "port": "3000",
+    "pathname": "/",
+    "search": "",
+    "hash": ""
+}
+*/
 
