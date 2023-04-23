@@ -139,6 +139,10 @@ io.on("connection", (socket)=>{
         // Server will send welcome message to new user
         socket.emit("message", generateMessage("System", "Welcome!"));
         socket.broadcast.to(user.room).emit("message", generateMessage("System",`${user.username} has joined the ${room} room.`));
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
         callback(); //Indicating no issue while adding a new user
 
     })
@@ -196,6 +200,10 @@ io.on("connection", (socket)=>{
             //socket.broadcast.emit("message", "A user has left.")
             //socket broadcast will also works but as user already left so no harm in using io.emit
             io.to(user.room).emit("message", generateMessage("System", `${user.username} has left the ${user.room} chat room.`));
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            })
         }
 
 

@@ -32,6 +32,7 @@ const messages = document.querySelector('#messages');
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const geolocTemplate = document.querySelector('#geoloc-template').innerHTML
 const lcnHprlnkTemplate = document.querySelector('#location-hyperlink').innerHTML;
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 
 //OPTIONS
@@ -62,6 +63,15 @@ socket.on("locationMessage", (locationData)=>{
         createdAt: moment(locationData.createdAt).format('hh:mm a')
     });
     messages.insertAdjacentHTML('beforeend', html);
+})
+
+
+socket.on('roomData', ({room, users})=>{
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML = html
 })
 
 
