@@ -1,5 +1,6 @@
-const generateMessage = (text) =>{
+const generateMessage = (username, text) =>{
     return {
+        username,
         text,
         createdAt: new Date().getTime()
     }
@@ -14,8 +15,9 @@ const generateMessage = (text) =>{
 
 
 // We can use the geolocation generated timestamp so we dont need to creat explicity
-const generateLocationMessage = (url, timeStamp) => {
+const generateLocationMessage = (username, url, timeStamp) => {
     return {
+        username,
         url,
         createdAt: timeStamp
     }

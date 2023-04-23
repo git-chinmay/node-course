@@ -137,8 +137,8 @@ io.on("connection", (socket)=>{
 
 
         // Server will send welcome message to new user
-        socket.emit("message", generateMessage("Welcome!"));
-        socket.broadcast.to(user.room).emit("message", generateMessage(`${user.username} has joined the ${room} room.`));
+        socket.emit("message", generateMessage("System", "Welcome!"));
+        socket.broadcast.to(user.room).emit("message", generateMessage("System",`${user.username} has joined the ${room} room.`));
         callback(); //Indicating no issue while adding a new user
 
     })
@@ -156,8 +156,11 @@ io.on("connection", (socket)=>{
         
         }
 
+        //Get userdata by the id so that can fetch room data
+        const user = getUser(socket.id);
+
         //fornow hardcoded the room name 
-        io.to('hot').emit("message", generateMessage(inputTextReceived));
+        io.to(user.room).emit("message", generateMessage(user.username, inputTextReceived));
         callback(); //just executing the callback send by user
     } )
 
@@ -166,6 +169,9 @@ io.on("connection", (socket)=>{
 
     //Server listenng the location data
     socket.on("sendLocation", (locationData, callback)=>{
+
+        const user = getUser(socket.id);
+
         if(!locationData){
             return callback("No location data received from user.")
         }
@@ -174,7 +180,7 @@ io.on("connection", (socket)=>{
         // callback();
 
         //Server emits the locations url
-        io.emit("locationMessage", generateLocationMessage(`https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`, locationData.timeStamp));
+        io.to(user.room).emit("locationMessage", generateLocationMessage(user.username, `https://google.com/maps?q=${locationData.latitude},${locationData.longitude}`, locationData.timeStamp));
         callback();
     })
 
@@ -189,7 +195,7 @@ io.on("connection", (socket)=>{
         if(user){
             //socket.broadcast.emit("message", "A user has left.")
             //socket broadcast will also works but as user already left so no harm in using io.emit
-            io.to(user.room).emit("message", generateMessage(`${user.username} has left the ${user.room} chat room.`));
+            io.to(user.room).emit("message", generateMessage("System", `${user.username} has left the ${user.room} chat room.`));
         }
 
 
