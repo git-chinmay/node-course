@@ -42,6 +42,47 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
 
 
+// AUTOSCROLL
+/*
+This auto scroll is different than browser provided uto scroll which is by defaukt we will get a scrioll bar to when messages filled in visible area
+This fuction is about If I have scrolled up to read old messages and at that time if some new mesages comes browser will automatically 
+scrolled down the page hance will dirupt my reading, this function will prevent that. While I am reading the old messages the new incoming 
+messages get added silently in background wihout interrupting.
+This function is just to give some nice user experience.
+*/
+const autoScroll = () =>{
+    // Remember by the time this function called new message already added to page
+
+    //New message element
+    const newMessageElement = messages.lastElementChild;
+
+    //Get the margin(feching it from CSS)
+    const newMessageStyles = getComputedStyle(newMessageElement);
+    //console.log(newMessageStyles); //In browser console we can see the CSSStyleDeclaration object with array of elements
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom);
+
+    //Height of the last message(new message)
+    const newMessageHeight = newMessageElement.offsetHeight + newMessageMargin;
+
+    //Visible heights
+    const visibleHeight = messages.offsetHeight
+
+    //Height of messages container(Total height we can scroll through)
+    const containerHeight = messages.scrollHeight;
+
+    //How far down we scrolled through? Distance from top + Total visible height (we need this for auto scroll calcuation)
+    //Amount of distance we scrolled from top  <scrollTop>
+    const scrolledOffset = messages.scrollTop + visibleHeight; 
+
+    //condition to making sure we are at the bottom before last message added
+    if(containerHeight - newMessageHeight <= scrolledOffset){
+        //Go for auto scroll
+        message.scrollTop = messages.scrollHeight
+    }
+    
+}
+
+
 // CODE CHALLENGE //
 //We have defined the Mustach & moment in index.html
 socket.on("message", (msg)=>{
@@ -52,6 +93,7 @@ socket.on("message", (msg)=>{
         createdAt: moment(msg.createdAt).format('hh:mm a') //https://momentjs.com/
     });
     messages.insertAdjacentHTML('beforeend', html); //insert new htmls bottom of the div
+    autoScroll();
 })
 
 
@@ -63,6 +105,7 @@ socket.on("locationMessage", (locationData)=>{
         createdAt: moment(locationData.createdAt).format('hh:mm a')
     });
     messages.insertAdjacentHTML('beforeend', html);
+    autoScroll();
 })
 
 
